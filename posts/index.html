@@ -1,742 +1,204 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <meta
-        name="theme-color"
-        content="#020617"
-    >
+<title>US Market AI - Daily Reports</title>
 
-    <meta
-        name="description"
-        content="Daily US stock market intelligence covering the S&P 500, Nasdaq, Dow Jones, Russell 2000 and major US stocks."
-    >
+<style>
 
-    <title>🇺🇸 US Market AI | Daily Market Intelligence</title>
+* {
+    box-sizing: border-box;
+}
 
-    <script src="https://cdn.tailwindcss.com"></script>
+body {
+    margin: 0;
+    min-height: 100vh;
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
 
-    <style>
+    background:
+        radial-gradient(
+            circle at top left,
+            #1e3a8a55,
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at top right,
+            #06b6d455,
+            transparent 40%
+        ),
+        #020617;
 
-        * {
-            box-sizing: border-box;
-        }
+    color: #e2e8f0;
+}
 
-        html {
-            scroll-behavior: smooth;
-        }
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 25px;
+}
 
-        body {
-            margin: 0;
+.header {
+    text-align: center;
+    padding: 45px 20px;
+    margin-bottom: 25px;
 
-            font-family: "Inter", sans-serif;
+    border-radius: 24px;
 
-            color: #e2e8f0;
+    background: rgba(255,255,255,0.05);
 
-            min-height: 100vh;
+    border: 1px solid rgba(255,255,255,0.08);
 
-            background:
-                radial-gradient(
-                    circle at 10% 0%,
-                    rgba(37, 99, 235, 0.20),
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at 90% 0%,
-                    rgba(6, 182, 212, 0.16),
-                    transparent 35%
-                ),
-                #020617;
-        }
+    backdrop-filter: blur(20px);
+}
 
-        .glass {
-            background:
-                rgba(15, 23, 42, 0.72);
+.badge {
+    display: inline-block;
 
-            border:
-                1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 15px;
 
-            backdrop-filter:
-                blur(18px);
+    border-radius: 999px;
 
-            -webkit-backdrop-filter:
-                blur(18px);
-        }
+    color: #38bdf8;
 
-        .hero-gradient {
-            background:
-                linear-gradient(
-                    135deg,
-                    #38bdf8,
-                    #2563eb,
-                    #22c55e
-                );
+    background: rgba(14,165,233,0.12);
 
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    border: 1px solid rgba(56,189,248,0.25);
 
-        .report-card {
-            transition:
-                transform 0.2s ease,
-                border-color 0.2s ease,
-                box-shadow 0.2s ease;
-        }
+    font-size: 14px;
+}
 
-        .report-card:hover {
-            transform: translateY(-4px);
+h1 {
+    margin: 18px 0 10px;
 
-            border-color:
-                rgba(56, 189, 248, 0.35);
+    font-size: 46px;
 
-            box-shadow:
-                0 20px 50px
-                rgba(0, 0, 0, 0.30);
-        }
+    background:
+        linear-gradient(
+            90deg,
+            #38bdf8,
+            #22c55e,
+            #facc15
+        );
 
-        .pulse {
-            animation:
-                pulse 2s infinite;
-        }
+    -webkit-background-clip: text;
 
-        @keyframes pulse {
+    -webkit-text-fill-color: transparent;
+}
 
-            0%,
-            100% {
-                opacity: 1;
-            }
+.subtitle {
+    color: #94a3b8;
 
-            50% {
-                opacity: 0.45;
-            }
-        }
+    font-size: 17px;
+}
 
-        .market-pill {
-            transition:
-                transform 0.2s ease,
-                background 0.2s ease;
-        }
+.report-card {
+    margin-bottom: 15px;
 
-        .market-pill:hover {
-            transform: translateY(-2px);
+    padding: 22px;
 
-            background:
-                rgba(255, 255, 255, 0.08);
-        }
+    border-radius: 20px;
 
-        .scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
+    background: rgba(15,23,42,0.85);
 
-        .scrollbar::-webkit-scrollbar-track {
-            background: #020617;
-        }
+    border: 1px solid rgba(255,255,255,0.08);
 
-        .scrollbar::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 999px;
-        }
+    transition: 0.2s;
+}
 
-    </style>
+.report-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(56,189,248,0.35);
+}
+
+.report-card a {
+    color: #38bdf8;
+
+    text-decoration: none;
+
+    font-size: 22px;
+
+    font-weight: 700;
+}
+
+.date {
+    margin-top: 8px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        padding: 15px;
+    }
+
+    .header {
+        padding: 30px 15px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .report-card a {
+        font-size: 18px;
+    }
+
+}
+
+</style>
 
 </head>
 
-
 <body>
 
-<div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+<div class="container">
 
+    <div class="header">
 
-    <!-- ================================================= -->
-    <!-- HEADER -->
-    <!-- ================================================= -->
-
-    <header
-        class="
-            glass
-            rounded-3xl
-            p-6
-            md:p-10
-            text-center
-            mb-6
-        "
-    >
-
-        <div
-            class="
-                inline-flex
-                items-center
-                gap-2
-                px-4
-                py-2
-                rounded-full
-                bg-sky-500/10
-                border
-                border-sky-400/20
-                text-sky-400
-                text-sm
-                font-semibold
-                mb-5
-            "
-        >
-
-            <span class="pulse">
-                ●
-            </span>
-
-            AI-POWERED US MARKET INTELLIGENCE
-
+        <div class="badge">
+            🇺🇸 AI-Powered US Market Intelligence
         </div>
 
-
-        <h1
-            class="
-                text-4xl
-                sm:text-5xl
-                md:text-6xl
-                font-extrabold
-                leading-tight
-            "
-        >
-
-            🇺🇸 US Market
-            <span class="hero-gradient">
-                AI
-            </span>
-
+        <h1>
+            US Market AI
         </h1>
 
-
-        <p
-            class="
-                mt-4
-                text-slate-400
-                text-base
-                md:text-lg
-                max-w-2xl
-                mx-auto
-            "
-        >
-
-            Daily US stock market intelligence
-            covering the S&amp;P 500, Nasdaq,
-            Dow Jones, Russell 2000 and major
-            US stocks.
-
-        </p>
-
-
-        <div
-            class="
-                mt-6
-                text-sm
-                text-slate-500
-            "
-        >
-
-            Automated market reports •
-            AI-powered analysis •
-            Updated every trading day
-
+        <div class="subtitle">
+            Daily S&P 500, Nasdaq & Dow Jones Market Reports
         </div>
 
-    </header>
+    </div>
 
+    
+        <article class="report-card">
 
+            <a href="2026-08-21.html">
+                🇺🇸 US Market Report - 2026-08-21
+            </a>
 
-    <!-- ================================================= -->
-    <!-- MARKET COVERAGE -->
-    <!-- ================================================= -->
-
-    <section
-        class="
-            grid
-            grid-cols-2
-            md:grid-cols-5
-            gap-3
-            mb-8
-        "
-    >
-
-        <div
-            class="
-                market-pill
-                glass
-                rounded-2xl
-                p-4
-                text-center
-            "
-        >
-
-            <div class="text-2xl mb-1">
-                📈
+            <div class="date">
+                📅 Published on 2026-08-21
             </div>
 
-            <div class="font-semibold">
-                S&amp;P 500
-            </div>
-
-            <div class="text-xs text-slate-500 mt-1">
-                Large Cap
-            </div>
-
-        </div>
-
-
-        <div
-            class="
-                market-pill
-                glass
-                rounded-2xl
-                p-4
-                text-center
-            "
-        >
-
-            <div class="text-2xl mb-1">
-                💻
-            </div>
-
-            <div class="font-semibold">
-                Nasdaq
-            </div>
-
-            <div class="text-xs text-slate-500 mt-1">
-                Tech Heavy
-            </div>
-
-        </div>
-
-
-        <div
-            class="
-                market-pill
-                glass
-                rounded-2xl
-                p-4
-                text-center
-            "
-        >
-
-            <div class="text-2xl mb-1">
-                🏛️
-            </div>
-
-            <div class="font-semibold">
-                Dow Jones
-            </div>
-
-            <div class="text-xs text-slate-500 mt-1">
-                Blue Chips
-            </div>
-
-        </div>
-
-
-        <div
-            class="
-                market-pill
-                glass
-                rounded-2xl
-                p-4
-                text-center
-            "
-        >
-
-            <div class="text-2xl mb-1">
-                🚀
-            </div>
-
-            <div class="font-semibold">
-                Russell 2000
-            </div>
-
-            <div class="text-xs text-slate-500 mt-1">
-                Small Caps
-            </div>
-
-        </div>
-
-
-        <div
-            class="
-                market-pill
-                glass
-                rounded-2xl
-                p-4
-                text-center
-                col-span-2
-                md:col-span-1
-            "
-        >
-
-            <div class="text-2xl mb-1">
-                ⚡
-            </div>
-
-            <div class="font-semibold">
-                VIX
-            </div>
-
-            <div class="text-xs text-slate-500 mt-1">
-                Volatility
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ================================================= -->
-    <!-- REPORTS -->
-    <!-- ================================================= -->
-
-    <section>
-
-        <div
-            class="
-                flex
-                flex-col
-                sm:flex-row
-                sm:items-end
-                sm:justify-between
-                gap-3
-                mb-5
-            "
-        >
-
-            <div>
-
-                <div
-                    class="
-                        text-xs
-                        font-semibold
-                        text-sky-400
-                        uppercase
-                        tracking-widest
-                        mb-2
-                    "
-                >
-                    Archive
-                </div>
-
-                <h2
-                    class="
-                        text-2xl
-                        md:text-3xl
-                        font-bold
-                    "
-                >
-                    Daily US Market Reports
-                </h2>
-
-            </div>
-
-
-            <div
-                class="
-                    text-sm
-                    text-slate-500
-                "
-            >
-
-                🇺🇸 US Trading Days
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ================================================= -->
-        <!-- REPORT LIST -->
-        <!-- ================================================= -->
-
-        <div class="space-y-4">
-
-
-            <!-- 2026-08-21 -->
-
-            <article
-                class="
-                    report-card
-                    glass
-                    rounded-2xl
-                    p-5
-                    md:p-6
-                "
-            >
-
-                <a
-                    href="2026-08-21.html"
-                    class="block"
-                >
-
-                    <div
-                        class="
-                            flex
-                            items-start
-                            justify-between
-                            gap-4
-                        "
-                    >
-
-                        <div>
-
-                            <div
-                                class="
-                                    text-lg
-                                    md:text-xl
-                                    font-bold
-                                    text-sky-400
-                                "
-                            >
-
-                                🇺🇸 US Market Report
-
-                            </div>
-
-                            <div
-                                class="
-                                    mt-2
-                                    text-sm
-                                    text-slate-400
-                                "
-                            >
-
-                                S&amp;P 500 • Nasdaq •
-                                Dow Jones • US Stocks
-
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="
-                                shrink-0
-                                text-xs
-                                text-slate-500
-                                bg-white/5
-                                px-3
-                                py-2
-                                rounded-full
-                            "
-                        >
-
-                            Aug 21, 2026
-
-                        </div>
-
-                    </div>
-
-                </a>
-
-            </article>
-
-
-
-            <!-- ================================================= -->
-            <!-- FUTURE AUTOMATIC REPORTS -->
-            <!-- ================================================= -->
-
-            <!--
-                New daily reports generated by main.py
-                will appear here automatically when
-                index.html is regenerated.
-            -->
-
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ================================================= -->
-    <!-- ABOUT -->
-    <!-- ================================================= -->
-
-    <section
-        class="
-            glass
-            rounded-3xl
-            p-6
-            md:p-8
-            mt-8
-        "
-    >
-
-        <div
-            class="
-                grid
-                md:grid-cols-3
-                gap-6
-            "
-        >
-
-            <div>
-
-                <div class="text-2xl mb-3">
-                    🤖
-                </div>
-
-                <h3
-                    class="
-                        font-bold
-                        text-lg
-                        mb-2
-                    "
-                >
-                    AI Analysis
-                </h3>
-
-                <p
-                    class="
-                        text-sm
-                        text-slate-400
-                        leading-6
-                    "
-                >
-                    Market data and financial
-                    headlines are processed into
-                    structured daily market scripts.
-
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <div class="text-2xl mb-3">
-                    📊
-                </div>
-
-                <h3
-                    class="
-                        font-bold
-                        text-lg
-                        mb-2
-                    "
-                >
-                    US Markets
-                </h3>
-
-                <p
-                    class="
-                        text-sm
-                        text-slate-400
-                        leading-6
-                    "
-                >
-                    Focused exclusively on US
-                    equities, major indexes and
-                    market-moving developments.
-
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <div class="text-2xl mb-3">
-                    ⚡
-                </div>
-
-                <h3
-                    class="
-                        font-bold
-                        text-lg
-                        mb-2
-                    "
-                >
-                    Automated
-                </h3>
-
-                <p
-                    class="
-                        text-sm
-                        text-slate-400
-                        leading-6
-                    "
-                >
-                    Reports are generated automatically
-                    after the US trading session.
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ================================================= -->
-    <!-- DISCLAIMER -->
-    <!-- ================================================= -->
-
-    <footer
-        class="
-            text-center
-            py-8
-            px-4
-        "
-    >
-
-        <p
-            class="
-                text-xs
-                text-slate-600
-                leading-5
-                max-w-2xl
-                mx-auto
-            "
-        >
-
-            ⚠️ Financial Disclaimer:
-            This website provides market information
-            and AI-generated analysis for educational
-            and informational purposes only. It is not
-            financial, investment, or trading advice.
-            Always conduct your own research before
-            making financial decisions.
-
-        </p>
-
-
-        <p
-            class="
-                mt-4
-                text-xs
-                text-slate-700
-            "
-        >
-
-            🇺🇸 US Market AI •
-            Automated Daily Market Intelligence
-
-        </p>
-
-    </footer>
-
+        </article>
+        
 
 </div>
 
