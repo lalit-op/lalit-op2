@@ -1,494 +1,745 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Market Reports</title>
-<script src="https://cdn.tailwindcss.com"></script>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#020617"
+    >
+
+    <meta
+        name="description"
+        content="Daily US stock market intelligence covering the S&P 500, Nasdaq, Dow Jones, Russell 2000 and major US stocks."
+    >
+
+    <title>🇺🇸 US Market AI | Daily Market Intelligence</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            font-family: "Inter", sans-serif;
+
+            color: #e2e8f0;
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(37, 99, 235, 0.20),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 90% 0%,
+                    rgba(6, 182, 212, 0.16),
+                    transparent 35%
+                ),
+                #020617;
+        }
+
+        .glass {
+            background:
+                rgba(15, 23, 42, 0.72);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+        }
+
+        .hero-gradient {
+            background:
+                linear-gradient(
+                    135deg,
+                    #38bdf8,
+                    #2563eb,
+                    #22c55e
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .report-card {
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(56, 189, 248, 0.35);
+
+            box-shadow:
+                0 20px 50px
+                rgba(0, 0, 0, 0.30);
+        }
+
+        .pulse {
+            animation:
+                pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.45;
+            }
+        }
+
+        .market-pill {
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .market-pill:hover {
+            transform: translateY(-2px);
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        .scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 999px;
+        }
+
+    </style>
+
 </head>
-<body class="bg-slate-900 text-white min-h-screen">
-<div class="max-w-4xl mx-auto p-4 md:p-8">
-    <h1 class="text-3xl md:text-5xl font-bold text-center mb-6 md:mb-8 mt-4 md:mt-0">
-        📈 Daily Market Reports
-    </h1>
-    
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-21.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-21
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-21
+
+
+<body>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <header
+        class="
+            glass
+            rounded-3xl
+            p-6
+            md:p-10
+            text-center
+            mb-6
+        "
+    >
+
+        <div
+            class="
+                inline-flex
+                items-center
+                gap-2
+                px-4
+                py-2
+                rounded-full
+                bg-sky-500/10
+                border
+                border-sky-400/20
+                text-sky-400
+                text-sm
+                font-semibold
+                mb-5
+            "
+        >
+
+            <span class="pulse">
+                ●
+            </span>
+
+            AI-POWERED US MARKET INTELLIGENCE
+
+        </div>
+
+
+        <h1
+            class="
+                text-4xl
+                sm:text-5xl
+                md:text-6xl
+                font-extrabold
+                leading-tight
+            "
+        >
+
+            🇺🇸 US Market
+            <span class="hero-gradient">
+                AI
+            </span>
+
+        </h1>
+
+
+        <p
+            class="
+                mt-4
+                text-slate-400
+                text-base
+                md:text-lg
+                max-w-2xl
+                mx-auto
+            "
+        >
+
+            Daily US stock market intelligence
+            covering the S&amp;P 500, Nasdaq,
+            Dow Jones, Russell 2000 and major
+            US stocks.
+
+        </p>
+
+
+        <div
+            class="
+                mt-6
+                text-sm
+                text-slate-500
+            "
+        >
+
+            Automated market reports •
+            AI-powered analysis •
+            Updated every trading day
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================= -->
+    <!-- MARKET COVERAGE -->
+    <!-- ================================================= -->
+
+    <section
+        class="
+            grid
+            grid-cols-2
+            md:grid-cols-5
+            gap-3
+            mb-8
+        "
+    >
+
+        <div
+            class="
+                market-pill
+                glass
+                rounded-2xl
+                p-4
+                text-center
+            "
+        >
+
+            <div class="text-2xl mb-1">
+                📈
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-20.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-20
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-20
+
+            <div class="font-semibold">
+                S&amp;P 500
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-19.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-19
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-19
+
+            <div class="text-xs text-slate-500 mt-1">
+                Large Cap
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-18.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-18
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-18
+
+        </div>
+
+
+        <div
+            class="
+                market-pill
+                glass
+                rounded-2xl
+                p-4
+                text-center
+            "
+        >
+
+            <div class="text-2xl mb-1">
+                💻
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-17.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-17
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-17
+
+            <div class="font-semibold">
+                Nasdaq
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-14.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-14
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-14
+
+            <div class="text-xs text-slate-500 mt-1">
+                Tech Heavy
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-13.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-13
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-13
+
+        </div>
+
+
+        <div
+            class="
+                market-pill
+                glass
+                rounded-2xl
+                p-4
+                text-center
+            "
+        >
+
+            <div class="text-2xl mb-1">
+                🏛️
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-12.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-12
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-12
+
+            <div class="font-semibold">
+                Dow Jones
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-11.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-11
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-11
+
+            <div class="text-xs text-slate-500 mt-1">
+                Blue Chips
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-10.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-10
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-10
+
+        </div>
+
+
+        <div
+            class="
+                market-pill
+                glass
+                rounded-2xl
+                p-4
+                text-center
+            "
+        >
+
+            <div class="text-2xl mb-1">
+                🚀
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-08.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-08
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-08
+
+            <div class="font-semibold">
+                Russell 2000
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-07.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-07
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-07
+
+            <div class="text-xs text-slate-500 mt-1">
+                Small Caps
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-06.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-06
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-06
+
+        </div>
+
+
+        <div
+            class="
+                market-pill
+                glass
+                rounded-2xl
+                p-4
+                text-center
+                col-span-2
+                md:col-span-1
+            "
+        >
+
+            <div class="text-2xl mb-1">
+                ⚡
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-05.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-05
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-05
+
+            <div class="font-semibold">
+                VIX
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-04.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-04
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-04
+
+            <div class="text-xs text-slate-500 mt-1">
+                Volatility
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-03.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-03
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-03
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- REPORTS -->
+    <!-- ================================================= -->
+
+    <section>
+
+        <div
+            class="
+                flex
+                flex-col
+                sm:flex-row
+                sm:items-end
+                sm:justify-between
+                gap-3
+                mb-5
+            "
+        >
+
+            <div>
+
+                <div
+                    class="
+                        text-xs
+                        font-semibold
+                        text-sky-400
+                        uppercase
+                        tracking-widest
+                        mb-2
+                    "
+                >
+                    Archive
+                </div>
+
+                <h2
+                    class="
+                        text-2xl
+                        md:text-3xl
+                        font-bold
+                    "
+                >
+                    Daily US Market Reports
+                </h2>
+
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-08-02.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-08-02
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-08-02
+
+
+            <div
+                class="
+                    text-sm
+                    text-slate-500
+                "
+            >
+
+                🇺🇸 US Trading Days
+
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-31.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-31
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-31
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- REPORT LIST -->
+        <!-- ================================================= -->
+
+        <div class="space-y-4">
+
+
+            <!-- 2026-08-21 -->
+
+            <article
+                class="
+                    report-card
+                    glass
+                    rounded-2xl
+                    p-5
+                    md:p-6
+                "
+            >
+
+                <a
+                    href="2026-08-21.html"
+                    class="block"
+                >
+
+                    <div
+                        class="
+                            flex
+                            items-start
+                            justify-between
+                            gap-4
+                        "
+                    >
+
+                        <div>
+
+                            <div
+                                class="
+                                    text-lg
+                                    md:text-xl
+                                    font-bold
+                                    text-sky-400
+                                "
+                            >
+
+                                🇺🇸 US Market Report
+
+                            </div>
+
+                            <div
+                                class="
+                                    mt-2
+                                    text-sm
+                                    text-slate-400
+                                "
+                            >
+
+                                S&amp;P 500 • Nasdaq •
+                                Dow Jones • US Stocks
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="
+                                shrink-0
+                                text-xs
+                                text-slate-500
+                                bg-white/5
+                                px-3
+                                py-2
+                                rounded-full
+                            "
+                        >
+
+                            Aug 21, 2026
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </article>
+
+
+
+            <!-- ================================================= -->
+            <!-- FUTURE AUTOMATIC REPORTS -->
+            <!-- ================================================= -->
+
+            <!--
+                New daily reports generated by main.py
+                will appear here automatically when
+                index.html is regenerated.
+            -->
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- ABOUT -->
+    <!-- ================================================= -->
+
+    <section
+        class="
+            glass
+            rounded-3xl
+            p-6
+            md:p-8
+            mt-8
+        "
+    >
+
+        <div
+            class="
+                grid
+                md:grid-cols-3
+                gap-6
+            "
+        >
+
+            <div>
+
+                <div class="text-2xl mb-3">
+                    🤖
+                </div>
+
+                <h3
+                    class="
+                        font-bold
+                        text-lg
+                        mb-2
+                    "
+                >
+                    AI Analysis
+                </h3>
+
+                <p
+                    class="
+                        text-sm
+                        text-slate-400
+                        leading-6
+                    "
+                >
+                    Market data and financial
+                    headlines are processed into
+                    structured daily market scripts.
+
+                </p>
+
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-30.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-30
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-30
+
+
+            <div>
+
+                <div class="text-2xl mb-3">
+                    📊
+                </div>
+
+                <h3
+                    class="
+                        font-bold
+                        text-lg
+                        mb-2
+                    "
+                >
+                    US Markets
+                </h3>
+
+                <p
+                    class="
+                        text-sm
+                        text-slate-400
+                        leading-6
+                    "
+                >
+                    Focused exclusively on US
+                    equities, major indexes and
+                    market-moving developments.
+
+                </p>
+
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-29.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-29
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-29
+
+
+            <div>
+
+                <div class="text-2xl mb-3">
+                    ⚡
+                </div>
+
+                <h3
+                    class="
+                        font-bold
+                        text-lg
+                        mb-2
+                    "
+                >
+                    Automated
+                </h3>
+
+                <p
+                    class="
+                        text-sm
+                        text-slate-400
+                        leading-6
+                    "
+                >
+                    Reports are generated automatically
+                    after the US trading session.
+
+                </p>
+
             </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-28.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-28
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-28
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-27.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-27
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-27
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-24.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-24
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-24
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-23.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-23
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-23
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-22.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-22
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-22
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-21.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-21
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-21
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-20.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-20
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-20
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-17.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-17
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-17
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-16.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-16
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-16
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-15.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-15
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-15
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-14.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-14
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-14
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-13.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-13
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-13
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-12.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-12
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-12
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-10.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-10
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-10
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-09.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-09
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-09
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-08.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-08
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-08
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-07.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-07
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-07
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-06.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-06
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-06
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-03.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-03
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-03
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-02.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-02
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-02
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-07-01.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-07-01
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-07-01
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-30.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-30
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-30
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-29.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-29
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-29
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-26.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-26
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-26
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-25.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-25
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-25
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-24.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-24
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-24
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-23.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-23
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-23
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-22.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-22
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-22
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-21.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-21
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-21
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-20.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-20
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-20
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-19.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-19
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-19
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-18.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-18
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-18
-            </div>
-        </article>
-        
-        <article class="bg-white/10 backdrop-blur-md border border-white/15 rounded-[20px] p-4 md:p-8 mb-4 md:mb-5 transition-transform hover:scale-[1.02]">
-            <a href="2026-06-17.html" class="block text-sky-400 hover:text-green-400 text-lg md:text-3xl font-bold mb-2 md:mb-3">
-                🔥 Daily Market Script - 2026-06-17
-            </a>
-            <div class="text-sm md:text-base text-slate-300">
-                📅 Published on 2026-06-17
-            </div>
-        </article>
-        
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- DISCLAIMER -->
+    <!-- ================================================= -->
+
+    <footer
+        class="
+            text-center
+            py-8
+            px-4
+        "
+    >
+
+        <p
+            class="
+                text-xs
+                text-slate-600
+                leading-5
+                max-w-2xl
+                mx-auto
+            "
+        >
+
+            ⚠️ Financial Disclaimer:
+            This website provides market information
+            and AI-generated analysis for educational
+            and informational purposes only. It is not
+            financial, investment, or trading advice.
+            Always conduct your own research before
+            making financial decisions.
+
+        </p>
+
+
+        <p
+            class="
+                mt-4
+                text-xs
+                text-slate-700
+            "
+        >
+
+            🇺🇸 US Market AI •
+            Automated Daily Market Intelligence
+
+        </p>
+
+    </footer>
+
+
 </div>
+
 </body>
+
 </html>
