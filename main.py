@@ -262,7 +262,7 @@ def generate_index():
         <article class="report-card">
 
             <a href="{file}">
-                🇺🇸 US Market Report - {date_str}
+                US Market Report - {date_str}
             </a>
 
             <div class="date">
@@ -837,7 +837,7 @@ pre {{
         </div>
 
         <h1>
-            🇺🇸 US Market AI
+            US Market AI
         </h1>
 
         <p class="tagline">
@@ -872,7 +872,7 @@ pre {{
             </div>
 
             <div class="file-name">
-                🇺🇸 US Daily Market Analysis
+                US Daily Market Analysis
             </div>
 
         </div>
@@ -882,7 +882,7 @@ pre {{
     </div>
 
     <div class="footer">
-        🇺🇸 US Market AI |
+        US Market AI |
         Daily US Stock Market Reports |
         Powered by Gemini
     </div>
@@ -1120,7 +1120,7 @@ WRITING RULES:
 def main():
 
     print("=" * 60)
-    print("🇺🇸 US MARKET AI SCRIPT GENERATOR")
+    print("US MARKET AI SCRIPT GENERATOR")
     print("=" * 60)
 
     # --------------------------------------------------------
