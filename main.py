@@ -7,7 +7,6 @@ import requests
 import yfinance as yf
 import google.generativeai as genai
 
-
 # ============================================================
 # ENVIRONMENT VARIABLES
 # ============================================================
