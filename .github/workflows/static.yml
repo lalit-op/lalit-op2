@@ -1,4 +1,4 @@
-name: Deploy US Market AI to GitHub Pages
+name: Generate and Deploy US Market AI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -17,27 +17,75 @@ concurrency:
 
 jobs:
 
-  deploy:
+  build:
 
     runs-on: ubuntu-latest
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v6
+      # ==========================================
+      # Checkout repository
+      # ==========================================
 
-      - name: Setup GitHub Pages
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      # ==========================================
+      # Setup Python
+      # ==========================================
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+
+      # ==========================================
+      # Install requirements
+      # ==========================================
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+
+      # ==========================================
+      # Generate homepage
+      # ==========================================
+
+      - name: Generate US Market homepage
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python -c "from main import generate_index; generate_index()"
+
+
+      # ==========================================
+      # Setup GitHub Pages
+      # ==========================================
+
+      - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v4
+
+      # ==========================================
+      # Upload website
+      # ==========================================
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: "."
+
+
+      # ==========================================
+      # Deploy
+      # ==========================================
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
