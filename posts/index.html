@@ -378,6 +378,107 @@ h1 {
         0 0 20px;
 
     color: #f8fafc;
+} 
+        .automation-box {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+
+    padding: 18px 20px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(15,23,42,0.85);
+
+    border:
+        1px solid rgba(56,189,248,0.18);
+}
+
+
+.automation-title {
+
+    color: #f8fafc;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+
+.automation-text {
+
+    margin-top: 4px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+.run-button {
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    color: white;
+
+    background: #238636;
+
+    border: 1px solid #2ea043;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    transition: 0.2s ease;
+}
+
+
+.run-button:hover {
+
+    background: #2ea043;
+}
+
+
+@media (max-width: 600px) {
+
+    .automation-box {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 12px;
+
+        padding: 16px;
+    }
+
+
+    .run-button {
+
+        width: 100%;
+
+    }
+
 }
 
 
@@ -824,6 +925,31 @@ h1 {
         Daily US Market Reports
 
     </h2>
+
+    <div class="automation-box">
+
+    <div class="automation-info">
+
+        <div class="automation-title">
+            ⚙️ US Market Automation
+        </div>
+
+        <div class="automation-text">
+            Generate the latest US market report
+        </div>
+
+    </div>
+
+    <a
+        href="https://github.com/lalit-op/lalit-op2/actions/workflows/market_news.yml"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="run-button"
+    >
+        ▶ Run Workflow
+    </a>
+
+</div>
 
 
     
