@@ -1549,7 +1549,7 @@ Only use supplied market data and news.
     logger.info("🤖 Step 3: Invoking Gemini AI Model...")
     try:
         # Standard stable model identifier
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-3.6-flash")
         response = model.generate_content(prompt)
 
         if not response.text:
