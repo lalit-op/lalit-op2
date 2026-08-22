@@ -7,7 +7,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <meta
@@ -20,36 +20,15 @@
         content="US Market AI - Daily US stock market intelligence, S&P 500, Nasdaq and Dow Jones reports."
     >
 
-    <meta
-        name="apple-mobile-web-app-capable"
-        content="yes"
-    >
-
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="black-translucent"
-    >
-
     <title>
         US Market AI | Daily US Market Reports
     </title>
 
-
     <style>
-
-        /* =====================================================
-           GLOBAL
-        ===================================================== */
-
-        :root {
-            --background: #020817;
-        }
-
 
         * {
             box-sizing: border-box;
         }
-
 
         html,
         body {
@@ -60,84 +39,18 @@
             width: 100%;
             height: 100%;
 
-            background:
-                var(--background);
-
-            overflow: hidden;
-
-            -webkit-text-size-adjust: 100%;
-        }
-
-
-        body {
-
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                sans-serif;
+            background: #020817;
 
             color: #e2e8f0;
+
         }
 
-
-        /* =====================================================
-           FULLSCREEN REPORT CONTAINER
-        ===================================================== */
-
-        .page-container {
-
-            position: fixed;
-
-            inset: 0;
+        .loading {
 
             width: 100%;
-            height: 100%;
+            height: 100vh;
 
-            overflow: hidden;
-
-            background:
-                #020817;
-        }
-
-
-        /* =====================================================
-           REPORT WEBSITE IFRAME
-        ===================================================== */
-
-        .market-frame {
-
-            width: 100%;
-            height: 100%;
-
-            display: block;
-
-            border: 0;
-
-            margin: 0;
-            padding: 0;
-
-            background:
-                #020817;
-
-            -webkit-tap-highlight-color:
-                transparent;
-        }
-
-
-        /* =====================================================
-           LOADING SCREEN
-        ===================================================== */
-
-        .loading-screen {
-
-            position: fixed;
-
-            inset: 0;
-
-            z-index: 1000;
+            height: 100dvh;
 
             display: flex;
 
@@ -149,24 +62,16 @@
 
             gap: 14px;
 
-            background:
-                #020817;
+            background: #020817;
 
-            transition:
-                opacity 0.4s ease,
-                visibility 0.4s ease;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
         }
-
-
-        .loading-screen.hidden {
-
-            opacity: 0;
-
-            visibility: hidden;
-
-            pointer-events: none;
-        }
-
 
         .loading-dot {
 
@@ -175,115 +80,42 @@
 
             border-radius: 50%;
 
-            background:
-                #22c55e;
+            background: #22c55e;
 
             box-shadow:
                 0 0 20px
-                rgba(34, 197, 94, 0.8);
+                rgba(34,197,94,0.8);
 
             animation:
-                loadingPulse 1.2s infinite;
+                pulse 1.2s infinite;
         }
-
 
         .loading-text {
 
-            color:
-                #64748b;
+            color: #64748b;
 
-            font-size:
-                13px;
+            font-size: 13px;
 
-            letter-spacing:
-                0.08em;
+            letter-spacing: 0.08em;
 
-            text-transform:
-                uppercase;
+            text-transform: uppercase;
         }
 
-
-        @keyframes loadingPulse {
+        @keyframes pulse {
 
             0% {
-
-                transform:
-                    scale(1);
-
-                opacity:
-                    1;
+                transform: scale(1);
+                opacity: 1;
             }
 
             50% {
-
-                transform:
-                    scale(1.35);
-
-                opacity:
-                    0.45;
+                transform: scale(1.35);
+                opacity: 0.45;
             }
 
             100% {
-
-                transform:
-                    scale(1);
-
-                opacity:
-                    1;
-            }
-        }
-
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
-
-        @media (max-width: 600px) {
-
-            html,
-            body {
-
-                width: 100%;
-
-                height: 100%;
-
-                overflow: hidden;
-            }
-
-
-            .page-container {
-
-                inset: 0;
-
-                width: 100%;
-                height: 100%;
-            }
-
-
-            .market-frame {
-
-                width: 100%;
-                height: 100%;
-            }
-
-        }
-
-
-        /* =====================================================
-           SAFE AREA
-        ===================================================== */
-
-        @supports (
-            padding: env(safe-area-inset-top)
-        ) {
-
-            .page-container {
-
-                padding-top:
-                    env(safe-area-inset-top);
-
-                padding-bottom:
-                    env(safe-area-inset-bottom);
+                transform: scale(1);
+                opacity: 1;
             }
 
         }
@@ -296,14 +128,7 @@
 <body>
 
 
-    <!-- =====================================================
-         LOADING
-    ===================================================== -->
-
-    <div
-        id="loading"
-        class="loading-screen"
-    >
+    <div class="loading">
 
         <div class="loading-dot"></div>
 
@@ -314,97 +139,30 @@
     </div>
 
 
-    <!-- =====================================================
-         MARKET DASHBOARD
-    ===================================================== -->
-
-    <main class="page-container">
-
-        <iframe
-
-            id="market-frame"
-
-            class="market-frame"
-
-            src="https://lalit-op.github.io/lalit-op2/posts/"
-
-            title="US Market AI Daily Market Reports"
-
-            allow="
-                clipboard-read;
-                clipboard-write;
-                display-capture;
-                fullscreen
-            "
-
-            allowfullscreen
-
-            referrerpolicy="origin"
-
-        ></iframe>
-
-    </main>
-
-
-    <!-- =====================================================
-         JAVASCRIPT
-    ===================================================== -->
-
     <script>
 
-        const frame =
-            document.getElementById(
-                "market-frame"
-            );
-
-
-        const loading =
-            document.getElementById(
-                "loading"
-            );
-
-
-        /*
-         * Hide loading screen after
-         * dashboard loads.
-         */
-
-        frame.addEventListener(
-            "load",
-            function () {
-
-                setTimeout(
-                    function () {
-
-                        loading.classList.add(
-                            "hidden"
-                        );
-
-                    },
-                    250
-                );
-
-            }
-        );
-
-
-        /*
-         * Fallback in case the iframe
-         * load event takes longer.
-         */
-
-        setTimeout(
-            function () {
-
-                loading.classList.add(
-                    "hidden"
-                );
-
-            },
-            5000
-        );
+        window.location.replace("posts/");
 
     </script>
+
+
+    <noscript>
+
+        <div class="loading">
+
+            <a
+                href="posts/"
+                style="
+                    color:#38bdf8;
+                    text-decoration:none;
+                "
+            >
+                Open US Market AI
+            </a>
+
+        </div>
+
+    </noscript>
 
 
 </body>
