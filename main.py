@@ -235,6 +235,9 @@ def fetch_news_headlines():
 # ============================================================
 # HTML INDEX
 # ============================================================
+def generate_index():
+
+    os.makedirs("posts", exist_ok=True)
 
     files = [
         f
@@ -250,16 +253,47 @@ def fetch_news_headlines():
 
         date_str = file.replace(".html", "")
 
+        try:
+            date_obj = datetime.strptime(
+                date_str,
+                "%Y-%m-%d"
+            )
+
+            display_date = date_obj.strftime(
+                "%B %d, %Y"
+            )
+
+            weekday = date_obj.strftime(
+                "%A"
+            )
+
+        except Exception:
+
+            display_date = date_str
+            weekday = ""
+
         cards += f"""
         <article class="report-card">
 
-            <a href="{file}">
-                US Market Report - {date_str}
-            </a>
+            <div class="report-info">
 
-            <div class="date">
-                📅 Published on {date_str}
+                <a href="{file}">
+                    📄 US Market Report - {date_str}
+                </a>
+
+                <div class="date">
+                    📅 {weekday}, {display_date}
+                </div>
+
+                <div class="market-tags">
+                    S&P 500 • Nasdaq • Dow Jones • US Stocks
+                </div>
+
             </div>
+
+            <a href="{file}" class="arrow">
+                →
+            </a>
 
         </article>
         """
@@ -285,8 +319,14 @@ def fetch_news_headlines():
     box-sizing: border-box;
 }}
 
+html {{
+    scroll-behavior: smooth;
+}}
+
 body {{
+
     margin: 0;
+
     min-height: 100vh;
 
     font-family:
@@ -297,12 +337,12 @@ body {{
     background:
         radial-gradient(
             circle at top left,
-            #1e3a8a55,
+            #123b6d55,
             transparent 40%
         ),
         radial-gradient(
             circle at top right,
-            #06b6d455,
+            #07598544,
             transparent 40%
         ),
         #020617;
@@ -311,52 +351,78 @@ body {{
 }}
 
 .container {{
-    max-width: 1000px;
+
+    width: 100%;
+
+    max-width: 1100px;
+
     margin: auto;
-    padding: 25px;
+
+    padding: 30px 25px 60px;
 }}
 
+
+/* =========================
+   HEADER
+========================= */
+
 .header {{
+
     text-align: center;
-    padding: 45px 20px;
+
+    padding: 50px 25px 35px;
+
     margin-bottom: 25px;
 
-    border-radius: 24px;
+    border-radius: 30px;
 
-    background: rgba(255,255,255,0.05);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15,38,70,0.75),
+            rgba(8,47,73,0.55)
+        );
 
-    border: 1px solid rgba(255,255,255,0.08);
+    border:
+        1px solid rgba(56,189,248,0.18);
 
-    backdrop-filter: blur(20px);
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.35);
 }}
 
 .badge {{
+
     display: inline-block;
 
-    padding: 8px 15px;
+    padding: 10px 20px;
 
     border-radius: 999px;
 
     color: #38bdf8;
 
-    background: rgba(14,165,233,0.12);
+    background:
+        rgba(14,165,233,0.08);
 
-    border: 1px solid rgba(56,189,248,0.25);
+    border:
+        1px solid rgba(56,189,248,0.25);
 
     font-size: 14px;
 }}
 
 h1 {{
-    margin: 18px 0 10px;
 
-    font-size: 46px;
+    margin: 25px 0 12px;
+
+    font-size: clamp(42px,7vw,72px);
+
+    line-height: 1.05;
 
     background:
         linear-gradient(
             90deg,
-            #38bdf8,
+            #22d3ee,
             #22c55e,
-            #facc15
+            #a3e635
         );
 
     -webkit-background-clip: text;
@@ -365,42 +431,169 @@ h1 {{
 }}
 
 .subtitle {{
+
     color: #94a3b8;
 
-    font-size: 17px;
+    font-size: clamp(16px,2vw,21px);
+
+    line-height: 1.5;
+}}
+
+
+/* =========================
+   CLOCK PANEL
+========================= */
+
+.clock-panel {{
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    margin-top: 35px;
+
+    border-radius: 25px;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(14,165,233,0.5);
+
+    background:
+        rgba(2,6,23,0.6);
+
+    text-align: left;
+}}
+
+.clock-box {{
+
+    padding: 28px;
+}}
+
+.clock-box + .clock-box {{
+
+    border-left:
+        1px solid rgba(148,163,184,0.2);
+}}
+
+.clock-title {{
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}}
+
+.us-title {{
+
+    color: #22c55e;
+}}
+
+.india-title {{
+
+    color: #f59e0b;
+}}
+
+.clock-time {{
+
+    font-size: clamp(30px,5vw,48px);
+
+    font-weight: 800;
+
+    color: #f8fafc;
+
+    line-height: 1.1;
+
+    margin: 8px 0;
+}}
+
+.clock-date {{
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+    margin-top: 8px;
+}}
+
+.clock-zone {{
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-top: 8px;
+}}
+
+
+/* =========================
+   REPORTS
+========================= */
+
+.section-label {{
+
+    color: #38bdf8;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.15em;
+
+    margin: 35px 0 8px;
+}}
+
+.section-title {{
+
+    font-size: clamp(30px,5vw,42px);
+
+    margin: 0 0 20px;
+
+    color: #f8fafc;
 }}
 
 .report-card {{
-    margin-bottom: 15px;
 
-    padding: 22px;
+    display: flex;
 
-    border-radius: 20px;
+    align-items: center;
 
-    background: rgba(15,23,42,0.85);
+    justify-content: space-between;
 
-    border: 1px solid rgba(255,255,255,0.08);
+    gap: 20px;
 
-    transition: 0.2s;
+    margin-bottom: 16px;
+
+    padding: 25px;
+
+    border-radius: 22px;
+
+    background:
+        rgba(15,23,42,0.82);
+
+    border:
+        1px solid rgba(56,189,248,0.15);
 }}
 
-.report-card:hover {{
-    transform: translateY(-3px);
+.report-info {{
 
-    border-color: rgba(56,189,248,0.35);
+    min-width: 0;
 }}
 
-.report-card a {{
+.report-card a:not(.arrow) {{
+
     color: #38bdf8;
 
     text-decoration: none;
 
-    font-size: 22px;
+    font-size: clamp(18px,3vw,25px);
 
-    font-weight: 700;
+    font-weight: 750;
 }}
 
 .date {{
+
     margin-top: 8px;
 
     color: #94a3b8;
@@ -408,24 +601,126 @@ h1 {{
     font-size: 14px;
 }}
 
-@media (max-width: 768px) {{
+.market-tags {{
+
+    margin-top: 10px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}}
+
+.arrow {{
+
+    flex-shrink: 0;
+
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(56,189,248,0.3);
+
+    color: #38bdf8;
+
+    text-decoration: none;
+
+    font-size: 32px;
+}}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:700px) {{
 
     .container {{
-        padding: 15px;
+
+        padding:
+            15px
+            12px
+            40px;
     }}
 
     .header {{
-        padding: 30px 15px;
+
+        padding:
+            35px 15px 20px;
+
+        border-radius: 22px;
+    }}
+
+    .badge {{
+
+        font-size: 11px;
+
+        padding: 8px 12px;
     }}
 
     h1 {{
-        font-size: 32px;
+
+        font-size: 42px;
     }}
 
-    .report-card a {{
+    .subtitle {{
+
+        font-size: 15px;
+    }}
+
+    .clock-panel {{
+
+        grid-template-columns: 1fr;
+
+        border-radius: 20px;
+    }}
+
+    .clock-box {{
+
+        padding: 22px 18px;
+    }}
+
+    .clock-box + .clock-box {{
+
+        border-left: none;
+
+        border-top:
+            1px solid rgba(148,163,184,0.2);
+    }}
+
+    .clock-time {{
+
+        font-size: 34px;
+    }}
+
+    .report-card {{
+
+        padding: 19px;
+
+        border-radius: 18px;
+    }}
+
+    .report-card a:not(.arrow) {{
+
         font-size: 18px;
     }}
 
+    .arrow {{
+
+        width: 48px;
+
+        height: 48px;
+
+        font-size: 27px;
+    }}
 }}
 
 </style>
@@ -436,36 +731,214 @@ h1 {{
 
 <div class="container">
 
-    <div class="header">
 
-        <div class="badge">
-            🇺🇸 AI-Powered US Market Intelligence
+<header class="header">
+
+    <div class="badge">
+        🇺🇸 AI-Powered US Market Intelligence
+    </div>
+
+    <h1>
+        US Market AI
+    </h1>
+
+    <div class="subtitle">
+        Daily S&amp;P 500, Nasdaq &amp; Dow Jones Market Reports
+    </div>
+
+
+    <!-- LIVE CLOCKS -->
+
+    <div class="clock-panel">
+
+
+        <!-- US -->
+
+        <div class="clock-box">
+
+            <div class="clock-title us-title">
+                🟢 US MARKET TIME
+            </div>
+
+            <div
+                id="us-time"
+                class="clock-time"
+            >
+                --:--:--
+            </div>
+
+            <div
+                id="us-date"
+                class="clock-date"
+            >
+                Loading...
+            </div>
+
+            <div class="clock-zone">
+                🇺🇸 New York • Eastern Time
+            </div>
+
         </div>
 
-        <h1>
-            US Market AI
-        </h1>
 
-        <div class="subtitle">
-            Daily S&P 500, Nasdaq & Dow Jones Market Reports
+        <!-- INDIA -->
+
+        <div class="clock-box">
+
+            <div class="clock-title india-title">
+                🟠 INDIA TIME
+            </div>
+
+            <div
+                id="india-time"
+                class="clock-time"
+            >
+                --:--:--
+            </div>
+
+            <div
+                id="india-date"
+                class="clock-date"
+            >
+                Loading...
+            </div>
+
+            <div class="clock-zone">
+                🇮🇳 New Delhi • India Standard Time
+            </div>
+
         </div>
 
     </div>
 
-    {cards}
+</header>
+
+
+<div class="section-label">
+    ARCHIVE
+</div>
+
+<h2 class="section-title">
+    Daily US Market Reports
+</h2>
+
+{cards}
 
 </div>
+
+
+<script>
+
+function updateClocks() {{
+
+    const now = new Date();
+
+
+    /* US EASTERN */
+
+    const usTime =
+        new Intl.DateTimeFormat(
+            "en-US",
+            {{
+                timeZone: "America/New_York",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true
+            }}
+        );
+
+
+    const usDate =
+        new Intl.DateTimeFormat(
+            "en-US",
+            {{
+                timeZone: "America/New_York",
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            }}
+        );
+
+
+    document
+        .getElementById("us-time")
+        .textContent =
+        usTime.format(now);
+
+
+    document
+        .getElementById("us-date")
+        .textContent =
+        usDate.format(now);
+
+
+    /* INDIA IST */
+
+    const indiaTime =
+        new Intl.DateTimeFormat(
+            "en-IN",
+            {{
+                timeZone: "Asia/Kolkata",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true
+            }}
+        );
+
+
+    const indiaDate =
+        new Intl.DateTimeFormat(
+            "en-IN",
+            {{
+                timeZone: "Asia/Kolkata",
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            }}
+        );
+
+
+    document
+        .getElementById("india-time")
+        .textContent =
+        indiaTime.format(now);
+
+
+    document
+        .getElementById("india-date")
+        .textContent =
+        indiaDate.format(now);
+
+}}
+
+
+updateClocks();
+
+setInterval(
+    updateClocks,
+    1000
+);
+
+</script>
 
 </body>
 
 </html>
 """
 
-    with open("posts/index.html", "w", encoding="utf-8") as f:
+    with open(
+        "posts/index.html",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
         f.write(html_content)
 
     print("Updated posts/index.html")
-
 
 # ============================================================
 # SAVE INDIVIDUAL POST
