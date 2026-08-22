@@ -1,5 +1,4 @@
 name: Generate and Deploy US Market AI
-
 on:
   push:
     branches: ["main"]
