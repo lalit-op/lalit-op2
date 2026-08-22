@@ -1,68 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Daily Market Reports English </title>
-    
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    >
+
+    <title>US Market AI</title>
+
     <style>
+
         :root {
-            /* Fallback background color */
-            --bg-color: #0f172a; 
+            --bg-color: #0f172a;
         }
 
-        body, html {
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
             margin: 0;
             padding: 0;
+
             width: 100%;
-            /* Use dvh (dynamic viewport height) if supported, fallback to vh */
+
             height: 100vh;
-            height: 100dvh; 
-            overflow: hidden; /* Critical: Prevent double scrollbars on mobile */
+            height: 100dvh;
+
+            overflow: hidden;
+
             background-color: var(--bg-color);
-            -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape mode */
+
+            -webkit-text-size-adjust: 100%;
         }
 
+
+        /* =====================================================
+           FULLSCREEN IFRAME
+        ===================================================== */
+
         .fullscreen-iframe-container {
+
             position: absolute;
+
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
+
             width: 100%;
             height: 100%;
-            /* Ensure smooth scrolling on iOS */
-            -webkit-overflow-scrolling: touch; 
+
+            -webkit-overflow-scrolling: touch;
         }
 
+
         .fullscreen-iframe {
+
             width: 100%;
             height: 100%;
+
             border: none;
+
             display: block;
-            /* Remove tap highlight color on mobile */
-            -webkit-tap-highlight-color: transparent; 
+
+            -webkit-tap-highlight-color: transparent;
         }
+
+
+        /* =====================================================
+           LIVE US CLOCK
+        ===================================================== */
+
+        .us-clock {
+
+            position: fixed;
+
+            top: 16px;
+            right: 16px;
+
+            z-index: 9999;
+
+            min-width: 220px;
+
+            padding: 12px 18px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(2, 6, 23, 0.88);
+
+            border:
+                1px solid rgba(56, 189, 248, 0.30);
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.35);
+
+            backdrop-filter:
+                blur(16px);
+
+            -webkit-backdrop-filter:
+                blur(16px);
+
+            color: white;
+
+            text-align: center;
+
+            font-family:
+                Inter,
+                Arial,
+                sans-serif;
+        }
+
+
+        .clock-label {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 6px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.12em;
+
+            text-transform: uppercase;
+
+            color: #38bdf8;
+
+            margin-bottom: 4px;
+        }
+
+
+        .clock-dot {
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow:
+                0 0 10px rgba(34, 197, 94, 0.8);
+        }
+
+
+        .clock-time {
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            line-height: 1.2;
+
+            color: #f8fafc;
+        }
+
+
+        .clock-date {
+
+            margin-top: 4px;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+        }
+
+
+        .clock-zone {
+
+            margin-top: 3px;
+
+            font-size: 9px;
+
+            color: #64748b;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .us-clock {
+
+                top: 10px;
+                right: 10px;
+
+                min-width: 175px;
+
+                padding: 9px 12px;
+
+                border-radius: 13px;
+            }
+
+
+            .clock-label {
+
+                font-size: 8px;
+
+                letter-spacing: 0.08em;
+            }
+
+
+            .clock-dot {
+
+                width: 6px;
+                height: 6px;
+            }
+
+
+            .clock-time {
+
+                font-size: 17px;
+            }
+
+
+            .clock-date {
+
+                font-size: 9px;
+            }
+
+
+            .clock-zone {
+
+                font-size: 8px;
+            }
+
+        }
+
     </style>
+
 </head>
+
+
 <body>
-    
+
+
+    <!-- =====================================================
+         LIVE US CLOCK
+    ===================================================== -->
+
+    <div class="us-clock">
+
+        <div class="clock-label">
+
+            <span class="clock-dot"></span>
+
+            Live US Time
+
+        </div>
+
+
+        <div
+            id="us-time"
+            class="clock-time"
+        >
+            --:--:--
+        </div>
+
+
+        <div
+            id="us-date"
+            class="clock-date"
+        >
+            Loading...
+        </div>
+
+
+        <div class="clock-zone">
+            New York • Eastern Time
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MARKET REPORT WEBSITE
+    ===================================================== -->
+
     <div class="fullscreen-iframe-container">
-        <!-- 
-          Crucial settings for mobile compatibility:
-          1. No 'sandbox' attribute to maximize permissions.
-          2. allow="clipboard-read; clipboard-write; display-capture" for full functionality.
-          3. allowfullscreen for potential media elements.
-        -->
-        <iframe 
-            src="https://lalit-op.github.io/lalit-op2/posts/" 
+
+        <iframe
+            src="https://lalit-op.github.io/lalit-op2/posts/"
             class="fullscreen-iframe"
-            title="Stock Samvad AI Market Reports"
+            title="US Market AI Daily Reports"
             allow="clipboard-read; clipboard-write; display-capture; fullscreen"
             allowfullscreen
             referrerpolicy="origin"
         ></iframe>
+
     </div>
 
+
+
+    <!-- =====================================================
+         LIVE CLOCK JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+        function updateUSClock() {
+
+            const now = new Date();
+
+
+            /*
+             * US Eastern Time
+             *
+             * Automatically handles:
+             * EDT
+             * EST
+             */
+
+            const timeFormatter =
+                new Intl.DateTimeFormat(
+                    "en-US",
+                    {
+                        timeZone: "America/New_York",
+
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+
+                        hour12: true
+                    }
+                );
+
+
+            const dateFormatter =
+                new Intl.DateTimeFormat(
+                    "en-US",
+                    {
+                        timeZone: "America/New_York",
+
+                        weekday: "long",
+
+                        month: "long",
+
+                        day: "numeric",
+
+                        year: "numeric"
+                    }
+                );
+
+
+            document
+                .getElementById("us-time")
+                .textContent =
+                timeFormatter.format(now);
+
+
+            document
+                .getElementById("us-date")
+                .textContent =
+                dateFormatter.format(now);
+
+        }
+
+
+        /*
+         * Run immediately
+         */
+
+        updateUSClock();
+
+
+        /*
+         * Update every second
+         */
+
+        setInterval(
+            updateUSClock,
+            1000
+        );
+
+    </script>
+
+
 </body>
+
 </html>
