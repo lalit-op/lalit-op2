@@ -1,5 +1,6 @@
 import os
 import html
+import logging
 from datetime import datetime
 
 import feedparser
@@ -7,27 +8,25 @@ import requests
 import yfinance as yf
 import google.generativeai as genai
 
-# ============================================================
-# ENVIRONMENT VARIABLES
-# ============================================================
+# Setup logger configuration for clean CLI feedback
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S"
+)
+logger = logging.getLogger("USMarketAI")
 
+# Load configuration parameters from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 CONTENT_TYPE = os.getenv("CONTENT_TYPE", "video").lower()
 
-
-# ============================================================
-# GEMINI CONFIGURATION
-# ============================================================
-
+# Configure Gemini AI client if API key is provided
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-
-
-# ============================================================
-# US MARKET CONFIGURATION
-# ============================================================
+else:
+    logger.warning("GEMINI_API_KEY environment variable is missing!")
 
 INDEXES = {
     "S&P 500": "^GSPC",
@@ -36,7 +35,6 @@ INDEXES = {
     "Russell 2000": "^RUT",
     "VIX": "^VIX",
 }
-
 
 MAJOR_STOCKS = {
     "NVIDIA": "NVDA",
@@ -49,17 +47,11 @@ MAJOR_STOCKS = {
     "Broadcom": "AVGO",
 }
 
-
-# ============================================================
-# MARKET DATA
-# ============================================================
-
-def get_single_ticker_data(symbol):
+def get_single_ticker_data(symbol: str) -> dict:
     """
-    Fetch latest available close and previous close
-    for a Yahoo Finance ticker.
+    Fetch latest available close and previous close for a Yahoo Finance ticker.
+    Returns calculated changes and percentages cleanly.
     """
-
     try:
         ticker = yf.Ticker(symbol)
         history = ticker.history(period="5d", auto_adjust=False)
@@ -74,13 +66,9 @@ def get_single_ticker_data(symbol):
 
         close = float(history["Close"].iloc[-1])
         previous_close = float(history["Close"].iloc[-2])
-
         change = close - previous_close
 
-        if previous_close != 0:
-            change_percent = (change / previous_close) * 100
-        else:
-            change_percent = 0
+        change_percent = (change / previous_close * 100) if previous_close != 0 else 0.0
 
         return {
             "close": round(close, 2),
@@ -90,8 +78,7 @@ def get_single_ticker_data(symbol):
         }
 
     except Exception as e:
-        print(f"Error fetching {symbol}: {e}")
-
+        logger.error(f"Error fetching ticker '{symbol}': {e}")
         return {
             "close": None,
             "previous_close": None,
@@ -99,101 +86,58 @@ def get_single_ticker_data(symbol):
             "change_percent": None,
         }
 
-
-def get_market_data():
-    """
-    Fetch major US market indices.
-    """
-
-    print("Fetching US market indices...")
-
+def get_market_data() -> dict:
+    """Fetch major US market indices data."""
+    logger.info("Fetching US market indices...")
     market_data = {}
-
     for name, symbol in INDEXES.items():
-        print(f"Fetching {name} ({symbol})...")
-
+        logger.info(f"  -> {name} ({symbol})")
         market_data[name] = get_single_ticker_data(symbol)
-
     return market_data
 
-
-def get_major_stocks():
-    """
-    Fetch major US stocks.
-    """
-
-    print("Fetching major US stocks...")
-
+def get_major_stocks() -> dict:
+    """Fetch major US stock data."""
+    logger.info("Fetching major US stock data...")
     stocks = {}
-
     for name, symbol in MAJOR_STOCKS.items():
-        print(f"Fetching {name} ({symbol})...")
-
+        logger.info(f"  -> {name} ({symbol})")
         stocks[name] = get_single_ticker_data(symbol)
-
     return stocks
 
-
-# ============================================================
-# FORMAT MARKET DATA
-# ============================================================
-
-def format_market_data(market_data, stocks):
+def format_market_data(market_data: dict, stocks: dict) -> str:
     """
-    Converts market data into clean text for Gemini.
+    Converts raw market dictionary data into structured text format for Gemini API prompt input.
     """
-
-    lines = []
-
-    lines.append("=== US MARKET INDICES ===")
+    lines = ["=== US MARKET INDICES ==="]
 
     for name, data in market_data.items():
-
         if data["close"] is None:
             lines.append(f"{name}: Unavailable")
             continue
-
         direction = "UP" if data["change"] >= 0 else "DOWN"
-
         lines.append(
-            f"{name}: "
-            f"Close={data['close']}, "
-            f"Change={data['change']}, "
-            f"Change%={data['change_percent']}%, "
-            f"Direction={direction}"
+            f"{name}: Close={data['close']}, Change={data['change']}, "
+            f"Change%={data['change_percent']}%, Direction={direction}"
         )
 
-    lines.append("")
-    lines.append("=== MAJOR US STOCKS ===")
+    lines.append("\n=== MAJOR US STOCKS ===")
 
     for name, data in stocks.items():
-
         if data["close"] is None:
             lines.append(f"{name}: Unavailable")
             continue
-
         direction = "UP" if data["change"] >= 0 else "DOWN"
-
         lines.append(
-            f"{name}: "
-            f"Close={data['close']}, "
-            f"Change={data['change']}, "
-            f"Change%={data['change_percent']}%, "
-            f"Direction={direction}"
+            f"{name}: Close={data['close']}, Change={data['change']}, "
+            f"Change%={data['change_percent']}%, Direction={direction}"
         )
 
     return "\n".join(lines)
 
-
-# ============================================================
-# US FINANCIAL NEWS
-# ============================================================
-
-def fetch_news_headlines():
+def fetch_news_headlines() -> str:
     """
-    Fetch US financial news from RSS feeds.
+    Fetch financial news headlines from curated RSS feeds.
     """
-
     sources = [
         "https://feeds.content.dowjones.io/public/rss/mw_topstories",
         "https://feeds.content.dowjones.io/public/rss/mw_marketpulse",
@@ -205,38 +149,31 @@ def fetch_news_headlines():
     ]
 
     headlines = []
-
-    print("Fetching US financial news...")
+    logger.info("Fetching US financial news RSS feeds...")
 
     for source in sources:
-
         try:
             feed = feedparser.parse(source)
-
             for item in feed.entries[:20]:
-
                 title = getattr(item, "title", "").strip()
-
-                if not title:
-                    continue
-
-                if title not in headlines:
+                if title and title not in headlines:
                     headlines.append(title)
-
         except Exception as e:
-            print(f"Error reading {source}: {e}")
+            logger.error(f"Error parsing RSS source {source}: {e}")
 
-    print(f"Collected {len(headlines)} unique headlines.")
-
+    logger.info(f"Collected {len(headlines)} unique news headlines.")
     return "\n".join(headlines[:100])
 
-
-# ============================================================
-# HTML INDEX
-# ============================================================
 def generate_index():
+    """
+    Builds and updates posts/index.html with a US-only live clock.
+    """
 
     os.makedirs("posts", exist_ok=True)
+
+    # ========================================================
+    # FIND REPORTS
+    # ========================================================
 
     files = [
         f
@@ -267,7 +204,6 @@ def generate_index():
             )
 
         except Exception:
-
             display_date = date_str
             weekday = ""
 
@@ -276,7 +212,10 @@ def generate_index():
 
             <div class="report-info">
 
-                <a href="{file}">
+                <a
+                    href="{file}"
+                    class="report-link"
+                >
                     📄 US Market Report - {date_str}
                 </a>
 
@@ -285,17 +224,24 @@ def generate_index():
                 </div>
 
                 <div class="market-tags">
-                    S&P 500 • Nasdaq • Dow Jones • US Stocks
+                    S&amp;P 500 • Nasdaq • Dow Jones • US Stocks
                 </div>
 
             </div>
 
-            <a href="{file}" class="arrow">
-                →
-            </a>
-
         </article>
         """
+
+    if not cards:
+        cards = """
+        <p class="no-reports">
+            No reports available yet.
+        </p>
+        """
+
+    # ========================================================
+    # HTML
+    # ========================================================
 
     html_content = f"""<!DOCTYPE html>
 
@@ -310,9 +256,19 @@ def generate_index():
     content="width=device-width, initial-scale=1.0"
 >
 
+<meta
+    name="theme-color"
+    content="#020617"
+>
+
 <title>US Market AI - Daily Reports</title>
 
+
 <style>
+
+/* ==========================================================
+   GLOBAL
+========================================================== */
 
 * {{
     box-sizing: border-box;
@@ -334,20 +290,30 @@ body {{
         sans-serif;
 
     background:
+
         radial-gradient(
             circle at top left,
             #123b6d55,
             transparent 40%
         ),
+
         radial-gradient(
             circle at top right,
             #07598544,
             transparent 40%
         ),
+
         #020617;
 
     color: #e2e8f0;
+
+    -webkit-text-size-adjust: 100%;
 }}
+
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
 
 .container {{
 
@@ -355,21 +321,23 @@ body {{
 
     max-width: 1100px;
 
-    margin: auto;
+    margin: 0 auto;
 
-    padding: 30px 25px 60px;
+    padding:
+        30px 25px 60px;
 }}
 
 
-/* =========================
+/* ==========================================================
    HEADER
-========================= */
+========================================================== */
 
 .header {{
 
     text-align: center;
 
-    padding: 50px 25px 35px;
+    padding:
+        50px 25px 35px;
 
     margin-bottom: 25px;
 
@@ -383,17 +351,31 @@ body {{
         );
 
     border:
-        1px solid rgba(56,189,248,0.18);
+        1px solid
+        rgba(56,189,248,0.18);
 
     box-shadow:
-        0 25px 70px rgba(0,0,0,0.35);
+        0 25px 70px
+        rgba(0,0,0,0.35);
 }}
+
+
+/* ==========================================================
+   BADGE
+========================================================== */
 
 .badge {{
 
-    display: inline-block;
+    display: inline-flex;
 
-    padding: 10px 20px;
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        10px 20px;
 
     border-radius: 999px;
 
@@ -403,18 +385,28 @@ body {{
         rgba(14,165,233,0.08);
 
     border:
-        1px solid rgba(56,189,248,0.25);
+        1px solid
+        rgba(56,189,248,0.25);
 
     font-size: 14px;
 }}
 
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
 h1 {{
 
-    margin: 25px 0 12px;
+    margin:
+        25px 0 12px;
 
-    font-size: clamp(42px,7vw,72px);
+    font-size:
+        clamp(42px, 7vw, 72px);
 
     line-height: 1.05;
+
+    font-weight: 800;
 
     background:
         linear-gradient(
@@ -429,25 +421,29 @@ h1 {{
     -webkit-text-fill-color: transparent;
 }}
 
+
+/* ==========================================================
+   SUBTITLE
+========================================================== */
+
 .subtitle {{
 
     color: #94a3b8;
 
-    font-size: clamp(16px,2vw,21px);
+    font-size:
+        clamp(16px, 2vw, 21px);
 
     line-height: 1.5;
 }}
 
 
-/* =========================
-   CLOCK PANEL
-========================= */
+/* ==========================================================
+   US CLOCK
+========================================================== */
 
 .clock-panel {{
 
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
+    width: 100%;
 
     margin-top: 35px;
 
@@ -456,53 +452,102 @@ h1 {{
     overflow: hidden;
 
     border:
-        1px solid rgba(14,165,233,0.5);
+        1px solid
+        rgba(14,165,233,0.5);
 
     background:
-        rgba(2,6,23,0.6);
+        rgba(2,6,23,0.65);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,0.25);
 
     text-align: left;
 }}
 
+
 .clock-box {{
 
-    padding: 28px;
+    width: 100%;
+
+    padding: 30px;
 }}
 
-.clock-box + .clock-box {{
 
-    border-left:
-        1px solid rgba(148,163,184,0.2);
-}}
+/* ==========================================================
+   US CLOCK TITLE
+========================================================== */
 
 .clock-title {{
 
-    font-size: 16px;
+    display: flex;
 
-    font-weight: 700;
+    align-items: center;
 
-    margin-bottom: 12px;
-}
-.flag {
-    display: inline-block;
-    margin-right: 8px;
-    font-size: 22px;
-    line-height: 1;
+    gap: 9px;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    margin-bottom: 15px;
+
+    letter-spacing: 0.02em;
 }}
+
 
 .us-title {{
 
     color: #22c55e;
 }}
 
-.india-title {{
 
-    color: #f59e0b;
+/* LIVE DOT */
+
+.live-dot {{
+
+    width: 11px;
+
+    height: 11px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 12px
+        rgba(34,197,94,0.9);
+
+    flex-shrink: 0;
 }}
+
+
+/* FLAG */
+
+.flag {{
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+    flex-shrink: 0;
+}}
+
+
+/* ==========================================================
+   CLOCK TIME
+========================================================== */
 
 .clock-time {{
 
-    font-size: clamp(30px,5vw,48px);
+    font-size:
+        clamp(34px, 5vw, 58px);
 
     font-weight: 800;
 
@@ -510,31 +555,47 @@ h1 {{
 
     line-height: 1.1;
 
-    margin: 8px 0;
+    margin:
+        10px 0 12px;
 }}
+
+
+/* ==========================================================
+   CLOCK DATE
+========================================================== */
 
 .clock-date {{
 
     color: #94a3b8;
 
-    font-size: 14px;
+    font-size:
+        clamp(14px, 2vw, 17px);
 
-    margin-top: 8px;
+    line-height: 1.5;
+
+    margin-top: 10px;
 }}
+
+
+/* ==========================================================
+   CLOCK LOCATION
+========================================================== */
 
 .clock-zone {{
 
     color: #64748b;
 
-    font-size: 13px;
+    font-size: 14px;
 
-    margin-top: 8px;
+    margin-top: 9px;
+
+    line-height: 1.5;
 }}
 
 
-/* =========================
-   REPORTS
-========================= */
+/* ==========================================================
+   ARCHIVE
+========================================================== */
 
 .section-label {{
 
@@ -546,31 +607,36 @@ h1 {{
 
     letter-spacing: 0.15em;
 
-    margin: 35px 0 8px;
+    margin:
+        35px 0 8px;
 }}
+
 
 .section-title {{
 
-    font-size: clamp(30px,5vw,42px);
+    font-size:
+        clamp(30px, 5vw, 42px);
 
-    margin: 0 0 20px;
+    line-height: 1.2;
+
+    margin:
+        0 0 20px;
 
     color: #f8fafc;
 }}
 
+
+/* ==========================================================
+   REPORT CARD
+========================================================== */
+
 .report-card {{
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
+    width: 100%;
 
     margin-bottom: 16px;
 
-    padding: 25px;
+    padding: 24px;
 
     border-radius: 22px;
 
@@ -578,33 +644,89 @@ h1 {{
         rgba(15,23,42,0.82);
 
     border:
-        1px solid rgba(56,189,248,0.15);
+        1px solid
+        rgba(56,189,248,0.15);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
 }}
 
+
+.report-card:hover {{
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(56,189,248,0.35);
+
+    background:
+        rgba(15,23,42,0.95);
+}}
+
+
+/* ==========================================================
+   REPORT INFO
+========================================================== */
+
 .report-info {{
+
+    width: 100%;
 
     min-width: 0;
 }}
 
-.report-card a:not(.arrow) {{
+
+/* ==========================================================
+   REPORT LINK
+========================================================== */
+
+.report-link {{
+
+    display: block;
 
     color: #38bdf8;
 
     text-decoration: none;
 
-    font-size: clamp(18px,3vw,25px);
+    font-size:
+        clamp(18px, 3vw, 25px);
 
     font-weight: 750;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
 }}
+
+
+.report-link:hover {{
+
+    color: #67e8f9;
+}}
+
+
+/* ==========================================================
+   DATE
+========================================================== */
 
 .date {{
 
-    margin-top: 8px;
+    margin-top: 9px;
 
     color: #94a3b8;
 
     font-size: 14px;
+
+    line-height: 1.5;
 }}
+
+
+/* ==========================================================
+   MARKET TAGS
+========================================================== */
 
 .market-tags {{
 
@@ -613,214 +735,387 @@ h1 {{
     color: #64748b;
 
     font-size: 13px;
-}}
 
-.arrow {{
-
-    flex-shrink: 0;
-
-    width: 58px;
-
-    height: 58px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 50%;
-
-    border:
-        1px solid rgba(56,189,248,0.3);
-
-    color: #38bdf8;
-
-    text-decoration: none;
-
-    font-size: 32px;
+    line-height: 1.5;
 }}
 
 
-/* =========================
+/* ==========================================================
+   NO REPORTS
+========================================================== */
+
+.no-reports {{
+
+    color: #64748b;
+
+    text-align: center;
+
+    padding: 30px;
+}}
+
+
+/* ==========================================================
    MOBILE
-========================= */
+========================================================== */
 
-@media (max-width:700px) {{
+@media (max-width: 700px) {{
 
     .container {{
 
         padding:
-            15px
-            12px
-            40px;
+            15px 12px 40px;
     }}
+
 
     .header {{
 
         padding:
-            35px 15px 20px;
+            35px 15px 22px;
+
+        margin-bottom: 20px;
 
         border-radius: 22px;
     }}
 
+
     .badge {{
+
+        max-width: 100%;
+
+        padding:
+            8px 13px;
 
         font-size: 11px;
 
-        padding: 8px 12px;
+        line-height: 1.4;
     }}
+
 
     h1 {{
 
+        margin-top: 22px;
+
         font-size: 42px;
+
+        line-height: 1.05;
     }}
+
 
     .subtitle {{
 
         font-size: 15px;
+
+        line-height: 1.45;
     }}
+
+
+    /* CLOCK */
 
     .clock-panel {{
 
-        grid-template-columns: 1fr;
+        margin-top: 28px;
 
         border-radius: 20px;
     }}
 
+
     .clock-box {{
 
-        padding: 22px 18px;
+        padding:
+            24px 18px;
     }}
 
-    .clock-box + .clock-box {{
 
-        border-left: none;
+    .clock-title {{
 
-        border-top:
-            1px solid rgba(148,163,184,0.2);
+        font-size: 17px;
+
+        gap: 7px;
     }}
+
+
+    .live-dot {{
+
+        width: 9px;
+
+        height: 9px;
+    }}
+
+
+    .flag {{
+
+        font-size: 21px;
+    }}
+
 
     .clock-time {{
 
         font-size: 34px;
+
+        white-space: nowrap;
     }}
+
+
+    .clock-date {{
+
+        font-size: 14px;
+
+        line-height: 1.45;
+    }}
+
+
+    .clock-zone {{
+
+        font-size: 13px;
+    }}
+
+
+    /* ARCHIVE */
+
+    .section-label {{
+
+        margin-top: 30px;
+
+        font-size: 12px;
+    }}
+
+
+    .section-title {{
+
+        font-size: 32px;
+
+        line-height: 1.15;
+    }}
+
+
+    /* REPORT */
 
     .report-card {{
 
-        padding: 19px;
+        padding:
+            19px 18px;
 
         border-radius: 18px;
     }}
 
-    .report-card a:not(.arrow) {{
+
+    .report-link {{
 
         font-size: 18px;
+
+        line-height: 1.35;
     }}
 
-    .arrow {{
 
-        width: 48px;
+    .date {{
 
-        height: 48px;
-
-        font-size: 27px;
+        font-size: 13px;
     }}
+
+
+    .market-tags {{
+
+        font-size: 12px;
+    }}
+
+}}
+
+
+/* ==========================================================
+   SMALL PHONES
+========================================================== */
+
+@media (max-width: 380px) {{
+
+    .container {{
+
+        padding-left: 10px;
+
+        padding-right: 10px;
+    }}
+
+
+    h1 {{
+
+        font-size: 36px;
+    }}
+
+
+    .clock-box {{
+
+        padding:
+            22px 15px;
+    }}
+
+
+    .clock-time {{
+
+        font-size: 29px;
+    }}
+
+}}
+
+
+/* ==========================================================
+   REDUCED MOTION
+========================================================== */
+
+@media (prefers-reduced-motion: reduce) {{
+
+    html {{
+        scroll-behavior: auto;
+    }}
+
+    .report-card {{
+        transition: none;
+    }}
+
 }}
 
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
 
-<header class="header">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <div class="badge">
-        🇺🇸 AI-Powered US Market Intelligence
-    </div>
-
-    <h1>
-        US Market AI
-    </h1>
-
-    <div class="subtitle">
-        Daily S&amp;P 500, Nasdaq &amp; Dow Jones Market Reports
-    </div>
+    <header class="header">
 
 
-    <!-- LIVE CLOCKS -->
+        <div class="badge">
 
-    <div class="clock-panel">
+            🇺🇸 AI-Powered US Market Intelligence
+
+        </div>
 
 
-        <!-- US -->
+        <h1>
 
-        <div class="clock-box">
+            US Market AI
 
-            <div class="clock-title us-title">
-               <span class="flag">🇺🇸</span>
-                  US MARKET TIME
-                 </div>
+        </h1>
 
-            <div
-                id="us-time"
-                class="clock-time"
-            >
-                --:--:--
-            </div>
 
-            <div
-                id="us-date"
-                class="clock-date"
-            >
-                Loading...
-            </div>
+        <div class="subtitle">
 
-            <div class="clock-zone">
-                New York • Eastern Time
+            Daily S&amp;P 500, Nasdaq &amp; Dow Jones
+            Market Reports
+
+        </div>
+
+
+        <!-- =================================================
+             US TIME ONLY
+        ================================================== -->
+
+        <div class="clock-panel">
+
+            <div class="clock-box">
+
+                <div class="clock-title us-title">
+
+                    <span class="live-dot"></span>
+
+                    <span class="flag">🇺🇸</span>
+
+                    <span>US MARKET TIME</span>
+
+                </div>
+
+
+                <div
+                    id="us-time"
+                    class="clock-time"
+                >
+                    --:--:--
+                </div>
+
+
+                <div
+                    id="us-date"
+                    class="clock-date"
+                >
+                    Loading...
+                </div>
+
+
+                <div class="clock-zone">
+
+                    New York • Eastern Time
+
+                </div>
+
             </div>
 
         </div>
 
 
-</header>
+    </header>
 
 
-<div class="section-label">
-    ARCHIVE
+    <!-- =====================================================
+         ARCHIVE
+    ====================================================== -->
+
+    <div class="section-label">
+
+        ARCHIVE
+
+    </div>
+
+
+    <h2 class="section-title">
+
+        Daily US Market Reports
+
+    </h2>
+
+
+    {cards}
+
+
 </div>
 
-<h2 class="section-title">
-    Daily US Market Reports
-</h2>
 
-{cards}
-
-</div>
-
+<!-- ==========================================================
+     US LIVE CLOCK JAVASCRIPT
+=========================================================== -->
 
 <script>
 
-function updateClocks() {{
+function updateUSClock() {{
 
     const now = new Date();
 
-
-    /* US EASTERN */
 
     const usTime =
         new Intl.DateTimeFormat(
             "en-US",
             {{
-                timeZone: "America/New_York",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true
+
+                timeZone:
+                    "America/New_York",
+
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit",
+
+                second:
+                    "2-digit",
+
+                hour12:
+                    true
+
             }}
         );
 
@@ -829,82 +1124,76 @@ function updateClocks() {{
         new Intl.DateTimeFormat(
             "en-US",
             {{
-                timeZone: "America/New_York",
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-                year: "numeric"
+
+                timeZone:
+                    "America/New_York",
+
+                weekday:
+                    "long",
+
+                month:
+                    "long",
+
+                day:
+                    "numeric",
+
+                year:
+                    "numeric"
+
             }}
         );
 
 
-    document
-        .getElementById("us-time")
-        .textContent =
-        usTime.format(now);
-
-
-    document
-        .getElementById("us-date")
-        .textContent =
-        usDate.format(now);
-
-
-    /* INDIA IST */
-
-    const indiaTime =
-        new Intl.DateTimeFormat(
-            "en-IN",
-            {{
-                timeZone: "Asia/Kolkata",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true
-            }}
+    const timeElement =
+        document.getElementById(
+            "us-time"
         );
 
 
-    const indiaDate =
-        new Intl.DateTimeFormat(
-            "en-IN",
-            {{
-                timeZone: "Asia/Kolkata",
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-                year: "numeric"
-            }}
+    const dateElement =
+        document.getElementById(
+            "us-date"
         );
 
 
-    document
-        .getElementById("india-time")
-        .textContent =
-        indiaTime.format(now);
+    if (timeElement) {{
+
+        timeElement.textContent =
+            usTime.format(now);
+
+    }}
 
 
-    document
-        .getElementById("india-date")
-        .textContent =
-        indiaDate.format(now);
+    if (dateElement) {{
+
+        dateElement.textContent =
+            usDate.format(now);
+
+    }}
 
 }}
 
 
-updateClocks();
+updateUSClock();
+
 
 setInterval(
-    updateClocks,
+    updateUSClock,
     1000
 );
 
 </script>
 
+
 </body>
 
 </html>
 """
+
+
+    # ========================================================
+    # SAVE
+    # ========================================================
 
     with open(
         "posts/index.html",
@@ -914,49 +1203,30 @@ setInterval(
 
         f.write(html_content)
 
-    print("Updated posts/index.html")
 
-# ============================================================
-# SAVE INDIVIDUAL POST
-# ============================================================
+    logger.info(
+        "Updated posts/index.html successfully."
+    )
 
-def save_post(title, content):
+def save_post(title: str, content: str):
     """
-    Generates a mobile-friendly HTML page
-    for the generated US market script.
+    Generates a mobile-friendly standalone HTML post page for the generated report.
     """
-
     os.makedirs("posts", exist_ok=True)
-
     filename = datetime.now().strftime("%Y-%m-%d") + ".html"
-
     filepath = os.path.join("posts", filename)
 
     safe_title = html.escape(title)
     safe_content = html.escape(content)
 
     html_content = f"""<!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{safe_title}</title>
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
->
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
 :root {{
     --bg: #020617;
     --card: #0f172a;
@@ -964,448 +1234,168 @@ def save_post(title, content):
     --text: #e2e8f0;
     --muted: #94a3b8;
 }}
-
-* {{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}}
-
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
 body {{
     font-family: 'Inter', sans-serif;
-
-    background:
-        radial-gradient(
-            circle at top left,
-            #1e3a8a33,
-            transparent 40%
-        ),
-        radial-gradient(
-            circle at top right,
-            #06b6d433,
-            transparent 40%
-        ),
-        var(--bg);
-
+    background: radial-gradient(circle at top left, #1e3a8a33, transparent 40%),
+                radial-gradient(circle at top right, #06b6d433, transparent 40%),
+                var(--bg);
     color: var(--text);
-
     min-height: 100vh;
 }}
-
-.container {{
-    max-width: 1200px;
-
-    margin: auto;
-
-    padding: 30px;
-}}
-
+.container {{ max-width: 1200px; margin: auto; padding: 30px; }}
 .header {{
     text-align: center;
-
     padding: 40px;
-
     border-radius: 24px;
-
     margin-bottom: 25px;
-
-    background:
-        rgba(255,255,255,0.05);
-
+    background: rgba(255,255,255,0.05);
     backdrop-filter: blur(20px);
-
-    border:
-        1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
 }}
-
 .badge {{
     display: inline-block;
-
     padding: 8px 16px;
-
     border-radius: 999px;
-
     background: #0ea5e920;
-
     border: 1px solid #38bdf830;
-
     color: #38bdf8;
-
     margin-bottom: 15px;
-
     font-size: 14px;
 }}
-
 .header h1 {{
     font-size: 48px;
-
     font-weight: 700;
-
-    background:
-        linear-gradient(
-            90deg,
-            #38bdf8,
-            #22c55e,
-            #facc15
-        );
-
+    background: linear-gradient(90deg, #38bdf8, #22c55e, #facc15);
     -webkit-background-clip: text;
-
     -webkit-text-fill-color: transparent;
-
     line-height: 1.2;
 }}
-
-.tagline {{
-    font-size: 18px;
-
-    color: #38bdf8;
-
-    margin-top: 10px;
-}}
-
-.toolbar {{
-    display: flex;
-
-    justify-content: flex-end;
-
-    margin-bottom: 20px;
-}}
-
+.tagline {{ font-size: 18px; color: #38bdf8; margin-top: 10px; }}
+.toolbar {{ display: flex; justify-content: flex-end; margin-bottom: 20px; }}
 .copy-btn {{
-    background:
-        linear-gradient(
-            135deg,
-            #2563eb,
-            #06b6d4
-        );
-
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
     color: white;
-
     border: none;
-
     padding: 14px 24px;
-
     border-radius: 14px;
-
     cursor: pointer;
-
     font-weight: 600;
 }}
-
-.copy-btn:hover {{
-    transform: translateY(-2px);
-}}
-
+.copy-btn:hover {{ transform: translateY(-2px); }}
 .card {{
-    background:
-        rgba(15,23,42,0.85);
-
-    border:
-        1px solid rgba(255,255,255,0.08);
-
+    background: rgba(15,23,42,0.85);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 24px;
-
     overflow: hidden;
-
     backdrop-filter: blur(20px);
-
-    box-shadow:
-        0 25px 60px rgba(0,0,0,0.45);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45);
 }}
-
 .card-top {{
     display: flex;
-
     align-items: center;
-
     padding: 15px 20px;
-
-    border-bottom:
-        1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }}
-
-.dots {{
-    display: flex;
-
-    gap: 8px;
-}}
-
-.dot {{
-    width: 14px;
-
-    height: 14px;
-
-    border-radius: 50%;
-}}
-
-.red {{
-    background: #ff5f57;
-}}
-
-.yellow {{
-    background: #ffbd2e;
-}}
-
-.green {{
-    background: #28c840;
-}}
-
-.file-name {{
-    margin-left: 15px;
-
-    color: #94a3b8;
-
-    font-size: 14px;
-}}
-
+.dots {{ display: flex; gap: 8px; }}
+.dot {{ width: 14px; height: 14px; border-radius: 50%; }}
+.red {{ background: #ff5f57; }}
+.yellow {{ background: #ffbd2e; }}
+.green {{ background: #28c840; }}
+.file-name {{ margin-left: 15px; color: #94a3b8; font-size: 14px; }}
 pre {{
     white-space: pre-wrap;
-
     word-wrap: break-word;
-
     padding: 30px;
-
     line-height: 1.8;
-
     font-size: 16px;
-
     color: #e2e8f0;
-
     font-family: 'Inter', sans-serif;
 }}
-
-.footer {{
-    text-align: center;
-
-    margin-top: 30px;
-
-    color: #64748b;
-
-    font-size: 14px;
-
-    padding-bottom: 20px;
-}}
-
+.footer {{ text-align: center; margin-top: 30px; color: #64748b; font-size: 14px; padding-bottom: 20px; }}
 .toast {{
     position: fixed;
-
     bottom: 25px;
-
     right: 25px;
-
     background: #22c55e;
-
     color: white;
-
     padding: 12px 20px;
-
     border-radius: 12px;
-
     display: none;
 }}
-
 @media (max-width: 768px) {{
-
-    .container {{
-        padding: 15px;
-    }}
-
-    .header {{
-        padding: 25px 15px;
-    }}
-
-    .header h1 {{
-        font-size: 32px;
-    }}
-
-    .tagline {{
-        font-size: 15px;
-    }}
-
-    .toolbar {{
-        justify-content: center;
-    }}
-
-    .copy-btn {{
-        width: 100%;
-
-        padding: 16px;
-    }}
-
-    .card {{
-        border-radius: 16px;
-    }}
-
-    .file-name {{
-        margin-left: 10px;
-
-        font-size: 12px;
-    }}
-
-    pre {{
-        padding: 20px 15px;
-
-        font-size: 15px;
-    }}
-
-    .toast {{
-        left: 50%;
-
-        right: auto;
-
-        transform: translateX(-50%);
-
-        width: 90%;
-
-        text-align: center;
-    }}
-
+    .container {{ padding: 15px; }}
+    .header {{ padding: 25px 15px; }}
+    .header h1 {{ font-size: 32px; }}
+    .tagline {{ font-size: 15px; }}
+    .toolbar {{ justify-content: center; }}
+    .copy-btn {{ width: 100%; padding: 16px; }}
+    .card {{ border-radius: 16px; }}
+    .file-name {{ margin-left: 10px; font-size: 12px; }}
+    pre {{ padding: 20px 15px; font-size: 15px; }}
+    .toast {{ left: 50%; right: auto; transform: translateX(-50%); width: 90%; text-align: center; }}
 }}
-
 </style>
-
 </head>
-
 <body>
-
 <div class="container">
-
     <div class="header">
-
-        <div class="badge">
-            🚀 AI Generated US Market Report
-        </div>
-
-        <h1>
-            US Market AI
-        </h1>
-
-        <p class="tagline">
-            Daily US Stock Market Intelligence
-        </p>
-
+        <div class="badge">🚀 AI Generated US Market Report</div>
+        <h1>US Market AI</h1>
+        <p class="tagline">Daily US Stock Market Intelligence</p>
     </div>
-
     <div class="toolbar">
-
-        <button
-            class="copy-btn"
-            onclick="copyScript()"
-        >
-            📋 Copy Full Script
-        </button>
-
+        <button class="copy-btn" onclick="copyScript()">📋 Copy Full Script</button>
     </div>
-
     <div class="card">
-
         <div class="card-top">
-
             <div class="dots">
-
                 <span class="dot red"></span>
-
                 <span class="dot yellow"></span>
-
                 <span class="dot green"></span>
-
             </div>
-
-            <div class="file-name">
-                US Daily Market Analysis
-            </div>
-
+            <div class="file-name">US Daily Market Analysis</div>
         </div>
-
         <pre id="script">{safe_content}</pre>
-
     </div>
-
     <div class="footer">
-        US Market AI |
-        Daily US Stock Market Reports |
-        Powered by Gemini
+        US Market AI | Daily US Stock Market Reports | Powered by Gemini
     </div>
-
 </div>
-
-<div id="toast" class="toast">
-    Script Copied Successfully ✅
-</div>
-
+<div id="toast" class="toast">Script Copied Successfully ✅</div>
 <script>
-
 function copyScript() {{
-
-    const text =
-        document
-        .getElementById("script")
-        .innerText;
-
-    navigator.clipboard
-        .writeText(text)
-        .then(() => {{
-
-            const toast =
-                document.getElementById("toast");
-
-            toast.style.display = "block";
-
-            setTimeout(() => {{
-                toast.style.display = "none";
-            }}, 2500);
-
-        }})
-        .catch(err => {{
-            console.error(
-                "Failed to copy:",
-                err
-            );
-        }});
-
+    const text = document.getElementById("script").innerText;
+    navigator.clipboard.writeText(text).then(() => {{
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => {{ toast.style.display = "none"; }}, 2500);
+    }}).catch(err => {{
+        console.error("Failed to copy script text:", err);
+    }});
 }}
-
 </script>
-
 </body>
-
 </html>
 """
 
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print("Saved:", filepath)
+    logger.info(f"Saved post page: {filepath}")
 
-
-# ============================================================
-# TELEGRAM
-# ============================================================
-
-def send_to_telegram(script):
+def send_to_telegram(script: str):
     """
-    Sends generated script to Telegram in chunks.
+    Sends generated script text to Telegram channel/chat in manageable message chunks.
     """
-
     if not BOT_TOKEN or not CHAT_ID:
-
-        print(
-            "Telegram BOT_TOKEN or CHAT_ID missing. "
-            "Skipping Telegram notification."
-        )
-
+        logger.warning("Telegram BOT_TOKEN or CHAT_ID is missing. Skipping Telegram dispatch.")
         return
 
-    telegram_url = (
-        f"https://api.telegram.org/"
-        f"bot{BOT_TOKEN}/sendMessage"
-    )
+    telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
     for i in range(0, len(script), 3500):
-
         try:
-
             response = requests.post(
                 telegram_url,
                 data={
@@ -1414,42 +1404,22 @@ def send_to_telegram(script):
                 },
                 timeout=30,
             )
-
             if not response.ok:
-
-                print(
-                    "Telegram error:",
-                    response.text
-                )
-
+                logger.error(f"Telegram API response error: {response.text}")
         except Exception as e:
+            logger.error(f"Error sending message chunk to Telegram: {e}")
 
-            print(
-                f"Error sending to Telegram: {e}"
-            )
+    logger.info("US market report successfully sent to Telegram.")
 
-    print(
-        "US market report sent to Telegram."
-    )
-
-
-# ============================================================
-# GEMINI PROMPTS
-# ============================================================
-
-def get_master_prompt():
+def get_master_prompt() -> str:
     """
-    Returns prompt based on CONTENT_TYPE.
+    Returns AI system prompt dynamically based on CONTENT_TYPE ('short' vs standard 'video').
     """
-
     if CONTENT_TYPE == "short":
-
         return """
-You are a professional US financial news anchor
-creating a YouTube Short for an American audience.
+You are a professional US financial news anchor creating a YouTube Short for an American audience.
 
-Create a 45–60 second YouTube Short about today's
-US stock market.
+Create a 45–60 second YouTube Short about today's US stock market.
 
 The audience is interested in:
 - S&P 500
@@ -1457,13 +1427,10 @@ The audience is interested in:
 - Dow Jones
 - Major US stocks
 - Federal Reserve
-- Inflation
-- Jobs data
-- Economic news
-- Corporate earnings
+- Inflation & Jobs data
+- Economic news & Corporate earnings
 
 FORMAT:
-
 1. Powerful HOOK
 2. What happened in today's market
 3. Biggest reason behind the move
@@ -1472,39 +1439,25 @@ FORMAT:
 6. Strong conclusion
 
 Also provide:
-
 - YouTube Shorts Title
 - Thumbnail Text
 - Description
 - 10 Hashtags
 
 IMPORTANT RULES:
-
 - Write entirely in natural American English.
-- Do not use Hindi.
-- Do not invent prices.
-- Do not invent percentages.
-- Do not invent news.
-- Do not invent earnings.
-- Do not invent Federal Reserve decisions.
+- Do not use non-English terms.
+- Do not invent prices, percentages, news, or earnings.
 - Use ONLY the supplied market data and headlines.
-- Clearly distinguish facts from analysis.
-- Keep the script suitable for a general audience.
-- Do not give personalized financial advice.
+- Keep script suitable for a general financial audience.
 """
 
     return """
-You are a professional US financial market analyst
-and YouTube financial news anchor.
+You are a professional US financial market analyst and YouTube financial news anchor.
 
-Create a detailed 8–12 minute YouTube video script
-about today's US stock market.
-
-The target audience is interested in US equities
-and follows the daily market closely.
+Create a detailed 8–12 minute YouTube video script about today's US stock market.
 
 COVER:
-
 1. Powerful opening hook
 2. Overall US market summary
 3. S&P 500 analysis
@@ -1515,17 +1468,15 @@ COVER:
 8. Biggest US stock movers
 9. Magnificent Seven / mega-cap stocks
 10. Major financial headlines
-11. Sector or market themes mentioned in the news
-12. Federal Reserve / economic developments if supported
-13. Earnings or corporate developments if supported
+11. Sector or market themes mentioned in news
+12. Federal Reserve / economic developments
+13. Earnings or corporate developments
 14. Why the market moved
 15. What investors are watching next
 16. Tomorrow's potential catalysts
-17. Conclusion
-18. Financial disclaimer
+17. Conclusion & Financial disclaimer
 
 Also provide:
-
 - SEO YouTube Title
 - Thumbnail Text
 - YouTube Description
@@ -1534,82 +1485,39 @@ Also provide:
 - Chapter Timestamps
 
 WRITING RULES:
-
 - Write entirely in natural American English.
-- Do not use Hindi.
-- Sound like a professional financial news channel.
-- Make the opening engaging.
-- Explain financial terms simply.
-- Do not repeat the same information unnecessarily.
-- Do not fabricate data.
-- Do not fabricate headlines.
-- Do not fabricate earnings.
-- Do not fabricate Federal Reserve actions.
-- Do not fabricate economic data.
-- Use ONLY the supplied market data and headlines.
-- If information is unavailable, explicitly say it is unavailable.
-- Do not provide personalized investment advice.
+- Sound like a professional financial news anchor.
+- Do not fabricate data or news headlines.
+- Use ONLY supplied data.
 - Include a clear financial disclaimer.
 - Target approximately 1800–2500 words.
 """
 
-
-# ============================================================
-# MAIN EXECUTION
-# ============================================================
-
 def main():
+    logger.info("============================================================")
+    logger.info("             US MARKET AI SCRIPT GENERATOR                  ")
+    logger.info("============================================================")
 
-    print("=" * 60)
-    print("US MARKET AI SCRIPT GENERATOR")
-    print("=" * 60)
-
-    # --------------------------------------------------------
-    # MARKET DATA
-    # --------------------------------------------------------
-
-    print("\n📊 Fetching US market data...")
-
+    # 1. Fetch Market Data
+    logger.info("📊 Step 1: Fetching US market data...")
     market_data = get_market_data()
-
     stocks = get_major_stocks()
+    market_text = format_market_data(market_data, stocks)
 
-    market_text = format_market_data(
-        market_data,
-        stocks
-    )
+    print("\n" + market_text + "\n")
 
-    print("\n" + market_text)
-
-    # --------------------------------------------------------
-    # NEWS
-    # --------------------------------------------------------
-
-    print("\n📰 Fetching US financial news...")
-
+    # 2. Fetch News Headlines
+    logger.info("📰 Step 2: Fetching financial news headlines...")
     news_text = fetch_news_headlines()
 
-    # --------------------------------------------------------
-    # GEMINI API CHECK
-    # --------------------------------------------------------
-
+    # 3. Check Gemini API configuration
     if not GEMINI_API_KEY:
-
-        print(
-            "❌ GEMINI_API_KEY is missing."
-        )
-
+        logger.error("❌ GEMINI_API_KEY is missing. Aborting generation.")
         return
 
-    # --------------------------------------------------------
-    # PROMPT
-    # --------------------------------------------------------
-
+    # 4. Construct AI Prompt
     master_prompt = get_master_prompt()
-
-    today = datetime.now().strftime(
-        "%B %d, %Y"
-    )
+    today = datetime.now().strftime("%B %d, %Y")
 
     prompt = f"""
 {master_prompt}
@@ -1617,129 +1525,65 @@ def main():
 ============================================================
 DATE
 ============================================================
-
 {today}
 
 ============================================================
 US MARKET DATA
 ============================================================
-
 {market_text}
 
 ============================================================
 US FINANCIAL NEWS HEADLINES
 ============================================================
-
 {news_text}
 
 ============================================================
 FINAL INSTRUCTION
 ============================================================
-
 Generate the final script now.
-
 Do not mention that you are an AI.
-
 Do not make up missing information.
-
-Only use the supplied market data and news.
+Only use supplied market data and news.
 """
 
-    # --------------------------------------------------------
-    # GEMINI GENERATION
-    # --------------------------------------------------------
-
-    print(
-        "\n🤖 Generating US market script..."
-    )
-
+    logger.info("🤖 Step 3: Invoking Gemini AI Model...")
     try:
-
-        model = genai.GenerativeModel(
-            "gemini-3.6-flash"
-        )
-
-        response = model.generate_content(
-            prompt
-        )
+        # Standard stable model identifier
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(prompt)
 
         if not response.text:
-
-            print(
-                "❌ Gemini returned an empty response."
-            )
-
+            logger.error("❌ Gemini returned an empty response.")
             return
 
         script = (
             f"🇺🇸 US MARKET AI\n"
             f"📅 {today}\n"
-            f"📊 Content Type: "
-            f"{CONTENT_TYPE.upper()}\n\n"
+            f"📊 Content Type: {CONTENT_TYPE.upper()}\n\n"
             f"{response.text}\n"
         )
 
-        # ----------------------------------------------------
-        # SAVE TXT
-        # ----------------------------------------------------
-
-        with open(
-            "latest_script.txt",
-            "w",
-            encoding="utf-8"
-        ) as f:
-
+        # 5. Save output text file
+        with open("latest_script.txt", "w", encoding="utf-8") as f:
             f.write(script)
+        logger.info("✅ Saved raw script to latest_script.txt")
 
-        print(
-            "✅ Saved latest_script.txt"
-        )
+        # 6. Save individual post HTML
+        title = f"US Market Report - {today}"
+        save_post(title, script)
 
-        # ----------------------------------------------------
-        # SAVE HTML
-        # ----------------------------------------------------
-
-        title = (
-            f"US Market Report - {today}"
-        )
-
-        save_post(
-            title,
-            script
-        )
-
-        # ----------------------------------------------------
-        # UPDATE INDEX
-        # ----------------------------------------------------
-
+        # 7. Update Archive Index HTML
         generate_index()
 
-        # ----------------------------------------------------
-        # TELEGRAM
-        # ----------------------------------------------------
-
+        # 8. Send via Telegram
         send_to_telegram(script)
 
-        print(
-            "\n✅ US market workflow completed."
-        )
+        logger.info("✅ US Market AI workflow completed successfully.")
 
     except Exception as e:
-
-        error_msg = (
-            f"❌ Gemini Error\n\n{e}"
-        )
-
-        print(error_msg)
-
-        send_to_telegram(
-            error_msg
-        )
-
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
+        error_msg = f"❌ Gemini Generation Error:\n\n{e}"
+        logger.error(error_msg)
+        send_to_telegram(error_msg)
 
 if __name__ == "__main__":
     main()
