@@ -482,6 +482,12 @@ h1 {{
     font-weight: 700;
 
     margin-bottom: 12px;
+}
+.flag {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 22px;
+    line-height: 1;
 }}
 
 .us-title {{
@@ -756,8 +762,9 @@ h1 {{
         <div class="clock-box">
 
             <div class="clock-title us-title">
-                🟢 US MARKET TIME
-            </div>
+               <span class="flag">🇺🇸</span>
+                  US MARKET TIME
+                 </div>
 
             <div
                 id="us-time"
@@ -774,41 +781,11 @@ h1 {{
             </div>
 
             <div class="clock-zone">
-                🇺🇸 New York • Eastern Time
+                New York • Eastern Time
             </div>
 
         </div>
 
-
-        <!-- INDIA -->
-
-        <div class="clock-box">
-
-            <div class="clock-title india-title">
-                🟠 INDIA TIME
-            </div>
-
-            <div
-                id="india-time"
-                class="clock-time"
-            >
-                --:--:--
-            </div>
-
-            <div
-                id="india-date"
-                class="clock-date"
-            >
-                Loading...
-            </div>
-
-            <div class="clock-zone">
-                🇮🇳 New Delhi • India Standard Time
-            </div>
-
-        </div>
-
-    </div>
 
 </header>
 
