@@ -1,4 +1,5 @@
 name: Daily Market Script
+
 on:
   schedule:
     - cron: '45 10 * * 1-5'
