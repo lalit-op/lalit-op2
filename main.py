@@ -236,13 +236,13 @@ def fetch_news_headlines():
 # HTML INDEX
 # ============================================================
 
-def generate_index():
-    """
-    Generates mobile-friendly index.html
-    containing all generated US market reports.
-    """
+# def generate_index():
+#     """
+#     Generates mobile-friendly index.html
+#     containing all generated US market reports.
+#     """
 
-    os.makedirs("posts", exist_ok=True)
+#     os.makedirs("posts", exist_ok=True)
 
     files = [
         f
