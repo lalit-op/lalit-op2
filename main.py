@@ -1105,14 +1105,6 @@ h1 {{
         </h1>
 
 
-        <div class="subtitle">
-
-            Daily S&amp;P 500, Nasdaq &amp; Dow Jones
-            Market Reports
-
-        </div>
-
-
         <!-- =================================================
              US TIME ONLY
         ================================================== -->
