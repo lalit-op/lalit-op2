@@ -10,115 +10,134 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     >
 
-    <title>US Market AI</title>
+    <meta
+        name="theme-color"
+        content="#020817"
+    >
+
+    <meta
+        name="description"
+        content="US Market AI - Daily US stock market intelligence, S&P 500, Nasdaq and Dow Jones reports."
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+    >
+
+    <title>
+        US Market AI | Daily US Market Reports
+    </title>
+
 
     <style>
 
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
         :root {
-            --bg-color: #0f172a;
+            --background: #020817;
         }
+
 
         * {
             box-sizing: border-box;
         }
 
+
         html,
         body {
+
             margin: 0;
             padding: 0;
 
             width: 100%;
+            height: 100%;
 
-            height: 100vh;
-            height: 100dvh;
+            background:
+                var(--background);
 
             overflow: hidden;
-
-            background-color: var(--bg-color);
 
             -webkit-text-size-adjust: 100%;
         }
 
 
-        /* =====================================================
-           FULLSCREEN IFRAME
-        ===================================================== */
-
-        .fullscreen-iframe-container {
-
-            position: absolute;
-
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-
-            width: 100%;
-            height: 100%;
-
-            -webkit-overflow-scrolling: touch;
-        }
-
-
-        .fullscreen-iframe {
-
-            width: 100%;
-            height: 100%;
-
-            border: none;
-
-            display: block;
-
-            -webkit-tap-highlight-color: transparent;
-        }
-
-
-        /* =====================================================
-           LIVE US CLOCK
-        ===================================================== */
-
-        .us-clock {
-
-            position: fixed;
-
-            top: 16px;
-            right: 16px;
-
-            z-index: 9999;
-
-            min-width: 220px;
-
-            padding: 12px 18px;
-
-            border-radius: 16px;
-
-            background:
-                rgba(2, 6, 23, 0.88);
-
-            border:
-                1px solid rgba(56, 189, 248, 0.30);
-
-            box-shadow:
-                0 10px 35px rgba(0, 0, 0, 0.35);
-
-            backdrop-filter:
-                blur(16px);
-
-            -webkit-backdrop-filter:
-                blur(16px);
-
-            color: white;
-
-            text-align: center;
+        body {
 
             font-family:
                 Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
                 Arial,
                 sans-serif;
+
+            color: #e2e8f0;
         }
 
 
-        .clock-label {
+        /* =====================================================
+           FULLSCREEN REPORT CONTAINER
+        ===================================================== */
+
+        .page-container {
+
+            position: fixed;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+            background:
+                #020817;
+        }
+
+
+        /* =====================================================
+           REPORT WEBSITE IFRAME
+        ===================================================== */
+
+        .market-frame {
+
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            border: 0;
+
+            margin: 0;
+            padding: 0;
+
+            background:
+                #020817;
+
+            -webkit-tap-highlight-color:
+                transparent;
+        }
+
+
+        /* =====================================================
+           LOADING SCREEN
+        ===================================================== */
+
+        .loading-screen {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 1000;
 
             display: flex;
 
@@ -126,65 +145,92 @@
 
             justify-content: center;
 
-            gap: 6px;
+            flex-direction: column;
 
-            font-size: 10px;
+            gap: 14px;
 
-            font-weight: 700;
+            background:
+                #020817;
 
-            letter-spacing: 0.12em;
-
-            text-transform: uppercase;
-
-            color: #38bdf8;
-
-            margin-bottom: 4px;
+            transition:
+                opacity 0.4s ease,
+                visibility 0.4s ease;
         }
 
 
-        .clock-dot {
+        .loading-screen.hidden {
 
-            width: 7px;
-            height: 7px;
+            opacity: 0;
+
+            visibility: hidden;
+
+            pointer-events: none;
+        }
+
+
+        .loading-dot {
+
+            width: 12px;
+            height: 12px;
 
             border-radius: 50%;
 
-            background: #22c55e;
+            background:
+                #22c55e;
 
             box-shadow:
-                0 0 10px rgba(34, 197, 94, 0.8);
+                0 0 20px
+                rgba(34, 197, 94, 0.8);
+
+            animation:
+                loadingPulse 1.2s infinite;
         }
 
 
-        .clock-time {
+        .loading-text {
 
-            font-size: 22px;
+            color:
+                #64748b;
 
-            font-weight: 800;
+            font-size:
+                13px;
 
-            line-height: 1.2;
+            letter-spacing:
+                0.08em;
 
-            color: #f8fafc;
+            text-transform:
+                uppercase;
         }
 
 
-        .clock-date {
+        @keyframes loadingPulse {
 
-            margin-top: 4px;
+            0% {
 
-            font-size: 11px;
+                transform:
+                    scale(1);
 
-            color: #94a3b8;
-        }
+                opacity:
+                    1;
+            }
 
+            50% {
 
-        .clock-zone {
+                transform:
+                    scale(1.35);
 
-            margin-top: 3px;
+                opacity:
+                    0.45;
+            }
 
-            font-size: 9px;
+            100% {
 
-            color: #64748b;
+                transform:
+                    scale(1);
+
+                opacity:
+                    1;
+            }
         }
 
 
@@ -194,49 +240,50 @@
 
         @media (max-width: 600px) {
 
-            .us-clock {
+            html,
+            body {
 
-                top: 10px;
-                right: 10px;
+                width: 100%;
 
-                min-width: 175px;
+                height: 100%;
 
-                padding: 9px 12px;
-
-                border-radius: 13px;
+                overflow: hidden;
             }
 
 
-            .clock-label {
+            .page-container {
 
-                font-size: 8px;
+                inset: 0;
 
-                letter-spacing: 0.08em;
+                width: 100%;
+                height: 100%;
             }
 
 
-            .clock-dot {
+            .market-frame {
 
-                width: 6px;
-                height: 6px;
+                width: 100%;
+                height: 100%;
             }
 
-
-            .clock-time {
-
-                font-size: 17px;
-            }
+        }
 
 
-            .clock-date {
+        /* =====================================================
+           SAFE AREA
+        ===================================================== */
 
-                font-size: 9px;
-            }
+        @supports (
+            padding: env(safe-area-inset-top)
+        ) {
 
+            .page-container {
 
-            .clock-zone {
+                padding-top:
+                    env(safe-area-inset-top);
 
-                font-size: 8px;
+                padding-bottom:
+                    env(safe-area-inset-bottom);
             }
 
         }
@@ -250,142 +297,111 @@
 
 
     <!-- =====================================================
-         LIVE US CLOCK
+         LOADING
     ===================================================== -->
 
-    <div class="us-clock">
+    <div
+        id="loading"
+        class="loading-screen"
+    >
 
-        <div class="clock-label">
+        <div class="loading-dot"></div>
 
-            <span class="clock-dot"></span>
-
-            Live US Time
-
-        </div>
-
-
-        <div
-            id="us-time"
-            class="clock-time"
-        >
-            --:--:--
-        </div>
-
-
-        <div
-            id="us-date"
-            class="clock-date"
-        >
-            Loading...
-        </div>
-
-
-        <div class="clock-zone">
-            New York • Eastern Time
+        <div class="loading-text">
+            Loading US Market AI
         </div>
 
     </div>
 
 
-
     <!-- =====================================================
-         MARKET REPORT WEBSITE
+         MARKET DASHBOARD
     ===================================================== -->
 
-    <div class="fullscreen-iframe-container">
+    <main class="page-container">
 
         <iframe
+
+            id="market-frame"
+
+            class="market-frame"
+
             src="https://lalit-op.github.io/lalit-op2/posts/"
-            class="fullscreen-iframe"
-            title="US Market AI Daily Reports"
-            allow="clipboard-read; clipboard-write; display-capture; fullscreen"
+
+            title="US Market AI Daily Market Reports"
+
+            allow="
+                clipboard-read;
+                clipboard-write;
+                display-capture;
+                fullscreen
+            "
+
             allowfullscreen
+
             referrerpolicy="origin"
+
         ></iframe>
 
-    </div>
-
+    </main>
 
 
     <!-- =====================================================
-         LIVE CLOCK JAVASCRIPT
+         JAVASCRIPT
     ===================================================== -->
 
     <script>
 
-        function updateUSClock() {
-
-            const now = new Date();
-
-
-            /*
-             * US Eastern Time
-             *
-             * Automatically handles:
-             * EDT
-             * EST
-             */
-
-            const timeFormatter =
-                new Intl.DateTimeFormat(
-                    "en-US",
-                    {
-                        timeZone: "America/New_York",
-
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-
-                        hour12: true
-                    }
-                );
+        const frame =
+            document.getElementById(
+                "market-frame"
+            );
 
 
-            const dateFormatter =
-                new Intl.DateTimeFormat(
-                    "en-US",
-                    {
-                        timeZone: "America/New_York",
-
-                        weekday: "long",
-
-                        month: "long",
-
-                        day: "numeric",
-
-                        year: "numeric"
-                    }
-                );
-
-
-            document
-                .getElementById("us-time")
-                .textContent =
-                timeFormatter.format(now);
-
-
-            document
-                .getElementById("us-date")
-                .textContent =
-                dateFormatter.format(now);
-
-        }
+        const loading =
+            document.getElementById(
+                "loading"
+            );
 
 
         /*
-         * Run immediately
+         * Hide loading screen after
+         * dashboard loads.
          */
 
-        updateUSClock();
+        frame.addEventListener(
+            "load",
+            function () {
+
+                setTimeout(
+                    function () {
+
+                        loading.classList.add(
+                            "hidden"
+                        );
+
+                    },
+                    250
+                );
+
+            }
+        );
 
 
         /*
-         * Update every second
+         * Fallback in case the iframe
+         * load event takes longer.
          */
 
-        setInterval(
-            updateUSClock,
-            1000
+        setTimeout(
+            function () {
+
+                loading.classList.add(
+                    "hidden"
+                );
+
+            },
+            5000
         );
 
     </script>
