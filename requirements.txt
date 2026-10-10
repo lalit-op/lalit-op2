@@ -1,7 +1,10 @@
+google-genai
 google-generativeai
+groq
 requests
 yfinance
 feedparser
+google-auth
 pandas
 numpy
 beautifulsoup4
