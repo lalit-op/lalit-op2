@@ -2,7 +2,7 @@ name: Daily Market Script
 
 on:
   schedule:
-    - cron: '45 10 * * 1-5'
+    - cron: '15 18 * * 1-6'
 
   workflow_dispatch:
     inputs:
