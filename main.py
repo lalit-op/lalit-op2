@@ -7,6 +7,7 @@ import feedparser
 import requests
 import yfinance as yf
 import google.generativeai as genai
+from groq import Groq
 
 # Setup logger configuration for clean CLI feedback
 logging.basicConfig(
@@ -21,6 +22,12 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 CONTENT_TYPE = os.getenv("CONTENT_TYPE", "video").lower()
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODELS = [
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+]
 
 # Configure Gemini AI client if API key is provided
 if GEMINI_API_KEY:
@@ -1611,6 +1618,95 @@ WRITING RULES:
 - Target approximately 1800–2500 words.
 """
 
+def generate_with_gemini(prompt: str):
+    """Try Gemini if configured; return None if generation fails."""
+    if not GEMINI_API_KEY:
+        logger.warning("GEMINI_API_KEY is missing; skipping Gemini.")
+        return None
+
+    try:
+        logger.info("Trying Gemini model: gemini-3.6-flash")
+        model = genai.GenerativeModel("gemini-3.6-flash")
+        response = model.generate_content(prompt)
+        result = getattr(response, "text", None)
+
+        if not result or not result.strip():
+            logger.warning("Gemini returned an empty response.")
+            return None
+
+        logger.info("Gemini generation succeeded.")
+        return result.strip()
+    except Exception as exc:
+        logger.error("Gemini generation failed: %s", exc)
+        return None
+
+
+def generate_with_groq(prompt: str):
+    """Try supported Groq production models in order."""
+    if not GROQ_API_KEY:
+        logger.warning("GROQ_API_KEY is missing; skipping Groq.")
+        return None
+
+    try:
+        client = Groq(api_key=GROQ_API_KEY, timeout=120.0, max_retries=1)
+    except Exception as exc:
+        logger.error("Could not initialize Groq client: %s", exc)
+        return None
+
+    for model_name in GROQ_MODELS:
+        try:
+            logger.info("Trying Groq model: %s", model_name)
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are a professional US financial market analyst "
+                            "and YouTube financial news writer. Use only supplied "
+                            "market data and headlines. Never invent financial facts. "
+                            "Write in natural American English and include a financial "
+                            "disclaimer when requested."
+                        ),
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.4,
+                max_tokens=8192,
+            )
+
+            result = response.choices[0].message.content
+            if not result or not result.strip():
+                raise RuntimeError("Groq returned an empty response.")
+
+            logger.info("Groq generation succeeded with %s.", model_name)
+            return result.strip()
+        except Exception as exc:
+            logger.error("Groq model %s failed: %s", model_name, exc)
+
+    logger.error("All configured Groq models failed.")
+    return None
+
+
+def generate_ai_script(prompt: str) -> str:
+    """Use Gemini first, then Groq if Gemini is unavailable."""
+    result = generate_with_gemini(prompt)
+    if result:
+        logger.info("AI provider selected: Gemini")
+        return result
+
+    logger.warning("Switching to Groq fallback.")
+    result = generate_with_groq(prompt)
+    if result:
+        logger.info("AI provider selected: Groq")
+        return result
+
+    raise RuntimeError(
+        "All AI providers failed. Check API keys, quotas, model availability, "
+        "and GitHub Actions logs."
+    )
+
+
 def main():
     logger.info("============================================================")
     logger.info("             US MARKET AI SCRIPT GENERATOR                  ")
@@ -1627,11 +1723,6 @@ def main():
     # 2. Fetch News Headlines
     logger.info("📰 Step 2: Fetching financial news headlines...")
     news_text = fetch_news_headlines()
-
-    # 3. Check Gemini API configuration
-    if not GEMINI_API_KEY:
-        logger.error("❌ GEMINI_API_KEY is missing. Aborting generation.")
-        return
 
     # 4. Construct AI Prompt
     master_prompt = get_master_prompt()
@@ -1664,21 +1755,15 @@ Do not make up missing information.
 Only use supplied market data and news.
 """
 
-    logger.info("🤖 Step 3: Invoking Gemini AI Model...")
+    logger.info("🤖 Step 3: Generating script with Gemini + Groq fallback...")
     try:
-        # Standard stable model identifier
-        model = genai.GenerativeModel("gemini-3.6-flash")
-        response = model.generate_content(prompt)
-
-        if not response.text:
-            logger.error("❌ Gemini returned an empty response.")
-            return
+        generated_text = generate_ai_script(prompt)
 
         script = (
             f"🇺🇸 US MARKET AI\n"
             f"📅 {today}\n"
             f"📊 Content Type: {CONTENT_TYPE.upper()}\n\n"
-            f"{response.text}\n"
+            f"{generated_text}\n"
         )
 
         # 5. Save output text file
@@ -1699,9 +1784,11 @@ Only use supplied market data and news.
         logger.info("✅ US Market AI workflow completed successfully.")
 
     except Exception as e:
-        error_msg = f"❌ Gemini Generation Error:\n\n{e}"
-        logger.error(error_msg)
+        error_msg = f"❌ AI Generation Error:\n\n{e}"
+        logger.exception("AI generation or report processing failed.")
         send_to_telegram(error_msg)
+        raise
+
 
 if __name__ == "__main__":
     main()
