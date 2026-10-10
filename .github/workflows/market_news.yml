@@ -19,66 +19,48 @@ permissions:
   contents: write
 
 jobs:
-
   market-news:
-
     runs-on: ubuntu-latest
 
     steps:
-
-      # ==========================================
-      # CHECKOUT
-      # ==========================================
-
+      # Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-
-      # ==========================================
-      # PYTHON
-      # ==========================================
-
+      # Setup Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-
-      # ==========================================
-      # DEPENDENCIES
-      # ==========================================
-
+      # Install dependencies
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-
-      # ==========================================
-      # RUN US MARKET SCRIPT
-      # ==========================================
-
+      # Run US market script
       - name: Run US Market Script
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+
+          # Gemini primary provider
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+          # Groq fallback provider
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+          # Content selection
           CONTENT_TYPE: ${{ inputs.content_type || 'video' }}
-        run: |
-          python main.py
 
+        run: python main.py
 
-      # ==========================================
-      # SAVE GENERATED POSTS
-      # ==========================================
-
+      # Save generated posts
       - name: Commit Posts
         run: |
-
           git config user.name "github-actions[bot]"
-
-          git config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add posts/
 
