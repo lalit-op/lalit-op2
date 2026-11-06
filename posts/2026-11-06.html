@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Market Report - November 06, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #020617;
+    --card: #0f172a;
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top left, #1e3a8a33, transparent 40%),
+                radial-gradient(circle at top right, #06b6d433, transparent 40%),
+                var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+.container { max-width: 1200px; margin: auto; padding: 30px; }
+.header {
+    text-align: center;
+    padding: 40px;
+    border-radius: 24px;
+    margin-bottom: 25px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #0ea5e920;
+    border: 1px solid #38bdf830;
+    color: #38bdf8;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+.header h1 {
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #38bdf8, #22c55e, #facc15);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+}
+.tagline { font-size: 18px; color: #38bdf8; margin-top: 10px; }
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+.copy-btn {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.copy-btn:hover { transform: translateY(-2px); }
+.card {
+    background: rgba(15,23,42,0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+}
+.card-top {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.dots { display: flex; gap: 8px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; }
+.red { background: #ff5f57; }
+.yellow { background: #ffbd2e; }
+.green { background: #28c840; }
+.file-name { margin-left: 15px; color: #94a3b8; font-size: 14px; }
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 30px;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+}
+.footer { text-align: center; margin-top: 30px; color: #64748b; font-size: 14px; padding-bottom: 20px; }
+.toast {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #22c55e;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: none;
+}
+@media (max-width: 768px) {
+    .container { padding: 15px; }
+    .header { padding: 25px 15px; }
+    .header h1 { font-size: 32px; }
+    .tagline { font-size: 15px; }
+    .toolbar { justify-content: center; }
+    .copy-btn { width: 100%; padding: 16px; }
+    .card { border-radius: 16px; }
+    .file-name { margin-left: 10px; font-size: 12px; }
+    pre { padding: 20px 15px; font-size: 15px; }
+    .toast { left: 50%; right: auto; transform: translateX(-50%); width: 90%; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="badge">🚀 AI Generated US Market Report</div>
+        <h1>US Market AI</h1>
+        <p class="tagline">Daily US Stock Market Intelligence</p>
+    </div>
+    <div class="toolbar">
+        <button class="copy-btn" onclick="copyScript()">📋 Copy Full Script</button>
+    </div>
+    <div class="card">
+        <div class="card-top">
+            <div class="dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <div class="file-name">US Daily Market Analysis</div>
+        </div>
+        <pre id="script">🇺🇸 US MARKET AI
+📅 November 06, 2026
+📊 Content Type: VIDEO
+
+# YOUTUBE METADATA &amp; PACKAGING
+
+### SEO YouTube Title
+Stock Market Today: Tech Stocks Rebound After AI Selloff | S&amp;P 500, Nasdaq Surge, Tesla &amp; Nvidia Jump!
+
+### Thumbnail Text
+- TECH REBOUND!
+- NVIDIA &amp; TESLA SURGE
+- MARKET RECOVERY?
+
+### YouTube Description
+The US stock market experienced a dramatic shift today as Wall Street mounted a relief rally following a brutal post-midterm tech selloff. In today&#x27;s video, we break down all the action across the S&amp;P 500, Nasdaq Composite, Dow Jones Industrial Average, and Russell 2000. 
+
+We take a deep dive into the rebound in chipmakers like Nvidia and AMD, analyze Tesla’s surge following news on the Cybertruck and Cybercab transition, and discuss Microsoft’s latest moves in the AI buildout. Plus, we cover major corporate developments, including CVS Health’s massive breakup plan, Disney’s announced layoffs, McDonald’s earnings beat, and crucial economic updates regarding jobless claims and labor costs.
+
+Stay informed on what drove today&#x27;s volatility and what key economic catalysts investors need to watch heading into the next trading session.
+
+***
+Disclaimer: This video is for educational and informational purposes only and should not be construed as financial, investment, or legal advice. Always do your own research and consult with a licensed professional before making any investment decisions.
+
+### 20 Hashtags
+#StockMarket #Investing #FinanceNews #WallStreet #Nasdaq #SP500 #DowJones #Nvidia #Tesla #TechStocks #StockMarketNews #Economy #FederalReserve #MarketUpdate #Crypto #CVS #Disney #AI #DayTrading #Stocks
+
+### Pinned Comment
+📌 **What’s your take on today&#x27;s tech rebound?** Do you think this is a temporary relief rally for chip stocks like Nvidia, or are we heading back toward all-time highs? Drop your thoughts in the comments below! 👇
+
+### Chapter Timestamps
+- `00:00` - Opening Hook: Tech Relief Rally
+- `00:50` - US Market Overview &amp; Volatility (VIX)
+- `02:15` - S&amp;P 500 &amp; Nasdaq Index Analysis
+- `03:45` - Dow Jones &amp; Russell 2000 Performance
+- `05:00` - Magnificent Seven &amp; Big Tech Breakdown
+- `07:10` - Deep Dive: Tesla, Cybertruck &amp; Cybercab Shift
+- `08:30` - Economic Data: Jobless Claims &amp; Productivity Trends
+- `09:50` - Major Corporate Headlines: CVS Split, Disney Layoffs, Wendy&#x27;s
+- `11:45` - Earnings Highlights: McDonald&#x27;s, Wayfair, E.l.f. Beauty
+- `13:10` - Market Drivers: Why Stocks Rebounded Today
+- `14:30` - What Investors Need to Watch Tomorrow &amp; Conclusion
+
+---
+
+# YOUTUBE VIDEO SCRIPT
+
+**[SCENE START]**
+
+**[VISUAL: FAST-PACED GRAPHICS SHOWING GREEN TECH TICKERS BLINKING ON SCREEN, TRANSITIONING TO STUDIO ANCHOR AT DESK]**
+
+**[ANCHOR (ON CAMERA)]**
+Welcome back to the channel, everyone. I’m your host, and this is your daily US Market Wrap-Up for Friday, November 6th, 2026. 
+
+If you were watching the ticker tape yesterday, you saw a downright violent shakeout in tech. But today, Wall Street staged a classic, hard-fought relief rally. After the Nasdaq slammed into correction territory following a post-midterm election panic, buyers stepped right back into the breach. High-beta semiconductor names and mega-cap tech stocks led a sharp rebound, even as non-tech blue chips weighed down the Dow. 
+
+**[GRAPHIC: MAJOR INDICES CLOSING SUMMARY TABLE]**
+- **S&amp;P 500:** 7,376.86 (+23.13 | +0.31%)
+- **NASDAQ:** 24,579.42 (+264.42 | +1.09%)
+- **DOW JONES:** 51,285.73 (-237.33 | -0.46%)
+- **RUSSELL 2000:** 2,754.11 (+24.22 | +0.89%)
+- **VIX:** 25.64 (-2.54 | -9.01%)
+
+Today was a classic tale of two markets: pure risk-on appetite in growth, technology, and small-caps, contrasted against defensive positioning and sector-specific drag on legacy industrial names. 
+
+Let&#x27;s dive straight into the numbers, break down why the market moved, and look at the massive corporate headlines breaking across the board tonight.
+
+---
+
+### OVERALL US MARKET SUMMARY &amp; VOLATILITY
+
+**[ANCHOR (ON CAMERA)]**
+Taking a look at our broader market performance, risk appetite made a distinct comeback. 
+
+**[GRAPHIC: VIX VOLATILITY CHART SHOWING DROP TO 25.64]**
+
+Volatility cooled off significantly today. The CBOE Volatility Index—Wall Street’s fear gauge—dropped by 9.01%, or 2.54 points, to close at 25.64. While a VIX above 25 still reflects heightened market anxiety following recent political shifts and AI debt concerns, today’s sharp drop signaled that traders are unwinding extreme short-term hedges.
+
+---
+
+### INDEX PERFORMANCE BREAKDOWN
+
+**[ANCHOR (ON CAMERA)]**
+Let&#x27;s walk through the major benchmark indices to see where money flowed today.
+
+**[GRAPHIC: S&amp;P 500 &amp; NASDAQ PERFORMANCE]**
+
+Starting with the benchmark **S&amp;P 500**, the index closed higher by 23.13 points, or 0.31%, finishing at 7,376.86. The S&amp;P managed to hold critical support levels, buoyed by strong momentum in megacap tech, despite dragged-down performances in healthcare and traditional consumer stables.
+
+Over on the **Nasdaq Composite**, growth investors finally got the relief bounce they were looking for. The tech-heavy index surged 264.42 points, or 1.09%, to close at 24,579.42. After taking a brutal hit over the last forty-eight hours—where over a trillion dollars in market cap evaporated from growth stocks—bargain hunters aggressively stepped in to buy the dip across semiconductors and software.
+
+**[GRAPHIC: DOW JONES &amp; RUSSELL 2000 PERFORMANCE]**
+
+However, the **Dow Jones Industrial Average** stood out as the lone loser among the major averages. The Dow shed 237.33 points, or 0.46%, closing at 51,285.73. Downward pressure on legacy retail, healthcare restructuring news, and broader sector rotation pulled the blue-chip index into negative territory.
+
+On the small-cap front, the **Russell 2000** showed impressive resilience. Small-cap stocks added 24.22 points, or 0.89%, to close at 2,754.11. Smaller companies, which are traditionally hyper-sensitive to domestic economic expectations and broad market sentiment, caught a strong bid as broader market fears abated.
+
+---
+
+### MAGNIFICENT SEVEN &amp; MEGA-CAP TECH STOCKS
+
+**[ANCHOR (ON CAMERA)]**
+Now, let’s zoom into the primary engine of today’s market move: Mega-cap Technology and the Magnificent Seven.
+
+**[GRAPHIC: MAGNIFICENT SEVEN DAILY TICKER BOARD]**
+- **NVIDIA (NVDA):** $186.64 (+2.78%)
+- **Tesla (TSLA):** $358.22 (+4.23%)
+- **Alphabet (GOOGL):** $284.78 (+0.78%)
+- **Meta Platforms (META):** $610.15 (+0.84%)
+- **Broadcom (AVGO):** $293.69 (+0.74%)
+- **Apple (AAPL):** $342.37 (-0.52%)
+- **Microsoft (MSFT):** $530.61 (-0.99%)
+- **Amazon (AMZN):** $259.30 (-0.35%)
+
+**[ANCHOR (ON CAMERA)]**
+**Nvidia** led the charge for the semiconductor space, soaring 2.78%—or $5.04 per share—to close at $186.64. Chipmaker stocks like Nvidia and AMD experienced a sharp bounce after what analysts were calling a &quot;violent&quot; post-election selloff. While some analysts on Wall Street are questioning whether this relief is temporary due to ongoing data center financing constraints, buyers clearly saw value at these lower levels.
+
+**Tesla** was today’s standout performer among the megacaps, ripping higher by 4.23%, up $14.53 to close at $358.22. The catalyst? Tesla announced major strategic shifts regarding its vehicle lineup. Elon Musk confirmed that Tesla will wind down Cybertruck production at its Texas Gigafactory next year. Why? To free up manufacturing capacity and aggressively ramp up production for the Cybercab. While the Cybertruck project comes to an end, investors welcomed the laser focus on autonomous mobility.
+
+Elsewhere in mega-caps:
+- **Alphabet** picked up 0.78% to close at $284.78.
+- **Meta Platforms** added 0.84% to finish at $610.15.
+- **Broadcom** caught the chip rally wave, rising 0.74% to $293.69.
+
+On the downside, **Microsoft** dropped 0.99% to close at $530.61. Reports surfaced today that Microsoft plans to trim its usage of third-party &quot;neoclouds&quot; as the broader AI infrastructure buildout faces localized capacity and cost strains. Meanwhile, **Apple** slipped 0.52% to $342.37, and **Amazon** edged lower by 0.35% to $259.30, even after reporting record sales over the Thanksgiving holiday shopping week.
+
+---
+
+### MACROECONOMIC DEVELOPMENTS &amp; FED WATCH
+
+**[ANCHOR (ON CAMERA)]**
+Turning our attention to the macro economy, we received several critical economic data points today that are causing Wall Street to rethink the Federal Reserve&#x27;s trajectory.
+
+**[GRAPHIC: ECONOMIC DATA HIGHLIGHTS]**
+- Weekly Jobless Claims: Dropped to lowest level since mid-May
+- Q4 Productivity: Slowed down
+- Q4 Unit Labor Costs: Accelerated
+
+First off, the US labor market continues to show notable underlying strength. Weekly jobless claims fell to their lowest level since mid-May, staying exceptionally subdued. While initial headline employment numbers look strong, analysts note that beneath the surface, dynamic shifts are taking place in hiring trends across corporate America.
+
+At the same time, fourth-quarter productivity data showed a slowdown, while unit labor costs accelerated. That combination—slowing worker productivity paired with rising labor costs—is an inflationary mix that could complicate the Federal Reserve&#x27;s future interest rate decisions. 
+
+Add in the political overhang from recent midterm election results—with a Democratic sweep triggering fresh debate around fiscal spending, trade, and deficit policy—and markets are forcing a complete repricing of future interest rate expectations.
+
+---
+
+### CORPORATE NEWS &amp; MAJOR EARNINGS HEADLINES
+
+**[ANCHOR (ON CAMERA)]**
+Beyond macro and tech, today was an absolute powerhouse of corporate earnings, strategic restructurings, and M&amp;A developments. Let’s run through the major corporate headlines hitting the tape.
+
+**[GRAPHIC: MAJOR CORPORATE HEADLINES]**
+
+**1. Healthcare Restructuring: CVS Health Splits Up**
+The biggest corporate bombshell today came from **CVS Health**. CVS officially announced plans to break up the healthcare giant, splitting off its retail drugstore business from its insurance and health services arms. Investors reacted with caution, sending CVS shares plunging by 10%. 
+
+**2. Cost-Cutting in Media: Disney Layoffs**
+Entertainment giant **Disney** announced it is planning several thousand layoffs across the company. Management has requested department managers to execute budget cuts of up to 20% as Disney aggressively pivots toward bottom-line profitability in its streaming and legacy operations.
+
+**3. Fast Food M&amp;A and Earnings: Wendy&#x27;s &amp; McDonald&#x27;s**
+In the restaurant space, **Wendy’s** rejected a massive $1.4 billion takeover proposal from Nelson Peltz’s hedge fund, Trian. 
+
+Meanwhile, **McDonald’s** shares enjoyed a solid rally after posting earnings that beat Wall Street estimates, driven by improving sales figures in US restaurants. On the flip side, **Wingstop** shares got slammed, dropping 12% after its quarterly profits fell short of market expectations. And **Yum Brands** beat earnings estimates, though management noted a cyclospora outbreak temporarily weighed on Taco Bell sales.
+
+**4. Retail &amp; Consumer Strength: E.l.f. Beauty &amp; Wayfair Surge**
+Consumer demand remains surprisingly resilient in specific pockets. **E.l.f. Beauty** delivered a blow-out earnings report, posting a staggering 51% surge in sales and raising its full-year guidance. 
+
+E-commerce furniture retailer **Wayfair** reported a 10% jump in sales, stating that it continues to capture market share even in a sluggish broader home goods market.
+
+**5. Consumer Goods Restructuring: Kraft Heinz Deal**
+Over in consumer goods, **Kraft Heinz** announced a $650 million deal to divest its North American coffee business as part of its ongoing portfolio optimization strategy.
+
+**6. Pharma &amp; Biotech: Pfizer, Moderna &amp; Gilead**
+Both **Pfizer** and **Moderna** delivered positive corporate updates. Pfizer raised its full-year outlook based on strong adoption of new product lines and announced a company veteran as its new Chief Financial Officer. Moderna also raised its 2026 sales outlook, citing momentum for its newer vaccine products. Separately, regulatory filings revealed that **Gilead Sciences** CEO Daniel O’Day sold $19.7 million in company shares.
+
+**7. Travel &amp; Airlines: JetBlue Increases Fees**
+In travel, **JetBlue** announced it is raising checked bag fees for the third time in a single year, explicitly citing elevated jet fuel costs cutting into operating margins.
+
+---
+
+### SPECIAL SECTOR FOCUS: DATA CENTERS &amp; THE AI INFRASTRUCTURE DEBT PROBLEM
+
+**[ANCHOR (ON CAMERA)]**
+Now, I want to take a minute to discuss a crucial underlying market theme that every investor needs to pay attention to right now: **The financing of the AI buildout.**
+
+**[GRAPHIC: AI DATA CENTER &amp; NEOCLOUD STRESS POINTS]**
+
+While stock prices in tech rebounded today, credit markets are telling a slightly more cautious story. Data center infrastructure requires massive capital expenditures, and much of that expansion is being funded by debt. 
+
+Bond market yields on AI-related debt have climbed rapidly. For instance, bond yields for high-profile AI infrastructure providers like CoreWeave have topped 16%. Neocloud firm IREN reported today that up to $4 billion in annualized revenue is being delayed due to customer-requested timeline adjustments. 
+
+With private valuations for major AI entities coming under intense scrutiny—investors are openly calling Anthropic’s $1.5 trillion valuation target a stretch—the market is realizing that the AI data center expansion is turning into a grueling war of financial attrition. The capacity is coming, but paying for it in an elevated interest-rate environment is proving far more expensive than previously priced in.
+
+---
+
+### WHY THE MARKET MOVED TODAY
+
+**[ANCHOR (ON CAMERA)]**
+So, taking a step back: **Why did the stock market move the way it did today?**
+
+It comes down to three main factors:
+
+1. **Oversold Technical Bounce:** Yesterday’s tech selloff pulled the Nasdaq straight into correction territory. Short-term momentum indicators hit deeply oversold levels, prompting automated algorithms and institutional dip-buyers to step in across high-conviction chip and AI stocks like Nvidia.
+2. **Volatility Compression:** As the VIX dropped over 9%, systematic funds that manage risk based on market volatility were forced to cover short positions and buy back equities.
+3. **Selective Earnings Outperformance:** Strong corporate execution from companies like McDonald’s, Wayfair, and E.l.f. Beauty reminded investors that corporate earnings fundamentals are holding up, offsetting fears surrounding interest rates and administrative shifts in Washington.
+
+---
+
+### WHAT INVESTORS ARE WATCHING NEXT &amp; TOMORROW&#x27;S CATALYSTS
+
+**[ANCHOR (ON CAMERA)]**
+Looking ahead to tomorrow and the coming sessions, here is what needs to be on your radar screen:
+
+**[GRAPHIC: WHAT TO WATCH NEXT]**
+- **Bond Yields &amp; Credit Spreads:** Keep a close eye on high-yield debt markets, especially yields tied to tech and data center buildouts.
+- **Post-Election Policy Nuances:** Watch for announcements regarding incoming administration appointments and prospective policy shifts affecting corporate tax rates and interest rate expectations.
+- **Labor Market Trends:** How unit labor costs and productivity metrics continue to influence Fed rate expectations going into the next Federal Reserve policy meeting.
+- **Supply Chain &amp; Shipping Costs:** Small retailers are warning of elevated shipping costs impacting holiday margin performance. Watch how retail supply chains digest higher transportation expenses as we head deeper into the fourth-quarter holiday season.
+
+---
+
+### CONCLUSION &amp; FINANCIAL DISCLAIMER
+
+**[ANCHOR (ON CAMERA)]**
+To wrap things up: Today brought a much-needed breath of fresh air for tech investors after a week defined by heavy downside volatility. However, with the Dow pulling back, corporate breakups like CVS making waves, and credit markets pricing in higher borrowing costs for the AI sector, this remains a market where stock selection and risk management are paramount.
+
+Make sure to hit that **Like** button if you found today’s breakdown valuable, subscribe to the channel, and ring the notification bell so you never miss our daily market intelligence updates. 
+
+**[GRAPHIC: FINANCIAL DISCLAIMER TEXT ON SCREEN]**
+
+*Finally, for our standard financial disclaimer: I am a market news commentator, not your personal financial advisor. The information provided in this video is strictly for educational, news reporting, and informational purposes only. Investing in equities, options, and fixed-income securities carries inherent risk, including the possible loss of principal. Always conduct your own thorough research or consult with a qualified financial advisor before executing any trade or investment strategy.*
+
+Thank you so much for watching, stay smart out there in the markets, and I&#x27;ll see you all again tomorrow!
+
+**[SCENE END]**
+</pre>
+    </div>
+    <div class="footer">
+        US Market AI | Daily US Stock Market Reports | Powered by Gemini
+    </div>
+</div>
+<div id="toast" class="toast">Script Copied Successfully ✅</div>
+<script>
+function copyScript() {
+    const text = document.getElementById("script").innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 2500);
+    }).catch(err => {
+        console.error("Failed to copy script text:", err);
+    });
+}
+</script>
+</body>
+</html>
